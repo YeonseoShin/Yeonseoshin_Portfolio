@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f9fafb;color:#111827;font-family:'Pretendard',system-ui,sans-serif;font-size:13px;padding:16px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.logo{font-size:15px;font-weight:700;color:#111827}
+.logo span{color:#6366f1}
+.search-row{display:flex;gap:8px;margin-bottom:14px}
+.search-input{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:7px 12px;color:#111827;font-size:12px;outline:none}
+.search-input:focus{border-color:#6366f1}
+.btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:#6366f1;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px}
+.stat-label{font-size:10px;color:#9ca3af;margin-bottom:4px}
+.stat-val{font-size:18px;font-weight:700}
+.stat-val.pos{color:#059669}
+.stat-val.neg{color:#dc2626}
+.stat-val.neu{color:#6b7280}
+.stat-val.risk{color:#d97706}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px}
+.card-title{font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.news-list{display:flex;flex-direction:column;gap:7px}
+.news-item{background:#f9fafb;border-radius:7px;padding:8px 10px;border-left:3px solid transparent}
+.news-item.pos{border-left-color:#059669}
+.news-item.neg{border-left-color:#dc2626}
+.news-item.neu{border-left-color:#d1d5db}
+.news-headline{font-size:11.5px;color:#111827;margin-bottom:3px;line-height:1.4}
+.news-meta{display:flex;align-items:center;gap:6px}
+.badge{font-size:9.5px;padding:2px 6px;border-radius:4px;font-weight:600}
+.badge.pos{background:#d1fae5;color:#065f46}
+.badge.neg{background:#fee2e2;color:#991b1b}
+.badge.neu{background:#f3f4f6;color:#6b7280}
+.badge.high{background:#fee2e2;color:#991b1b}
+.badge.mid{background:#fef3c7;color:#92400e}
+.badge.low{background:#d1fae5;color:#065f46}
+.news-date{font-size:10px;color:#9ca3af}
+.chart-wrap{position:relative;height:140px}
+.keywords{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.kw{font-size:10.5px;padding:3px 8px;border-radius:5px;background:#eef2ff;color:#4f46e5;border:1px solid #c7d2fe}
+.stock-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6}
+.stock-row:last-child{border:none}
+.stock-name{font-size:12px;color:#374151}
+.stock-change{font-size:12px;font-weight:600}
+.stock-change.up{color:#059669}
+.stock-change.dn{color:#dc2626}
+.summary-box{background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;padding:10px 12px;font-size:11.5px;color:#374151;line-height:1.7;margin-top:10px}
+.summary-label{font-size:10px;font-weight:700;color:#4f46e5;margin-bottom:4px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">📰 금융뉴스 <span>감성 분석</span></div>
+  <div style="font-size:11px;color:#9ca3af">KR-FinBert · yfinance · KoNLPy</div>
+</div>
+
+<div class="search-row">
+  <input class="search-input" id="kw" value="삼성전자 반도체" placeholder="키워드 입력..."/>
+  <button class="btn" onclick="simulate()">분석 실행</button>
+</div>
+
+<div class="stats" id="stats">
+  <div class="stat"><div class="stat-label">수집 기사</div><div class="stat-val" style="color:#e2e8f0">24건</div></div>
+  <div class="stat"><div class="stat-label">긍정</div><div class="stat-val pos">14</div></div>
+  <div class="stat"><div class="stat-label">부정</div><div class="stat-val neg">6</div></div>
+  <div class="stat"><div class="stat-label">리스크 등급</div><div class="stat-val risk">주의</div></div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">감성 분포</div>
+    <div class="chart-wrap"><canvas id="donut"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">연관 종목 주가 (30일)</div>
+    <div class="chart-wrap"><canvas id="line"></canvas></div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">주요 뉴스</div>
+    <div class="news-list" id="newsList">
+      <div class="news-item pos">
+        <div class="news-headline">삼성전자, HBM3E 공급 계약 확대… 엔비디아향 물량 증가</div>
+        <div class="news-meta"><span class="badge pos">긍정</span><span class="badge low">안정</span><span class="news-date">06.07</span></div>
+      </div>
+      <div class="news-item pos">
+        <div class="news-headline">반도체 수출 5월 역대 최고… AI 수요 지속 확대</div>
+        <div class="news-meta"><span class="badge pos">긍정</span><span class="badge low">안정</span><span class="news-date">06.06</span></div>
+      </div>
+      <div class="news-item neg">
+        <div class="news-headline">메모리 가격 하락 압력 지속… 레거시 재고 부담</div>
+        <div class="news-meta"><span class="badge neg">부정</span><span class="badge mid">주의</span><span class="news-date">06.05</span></div>
+      </div>
+      <div class="news-item neu">
+        <div class="news-headline">삼성전자 2분기 실적 발표 예정… 시장 기대치 혼재</div>
+        <div class="news-meta"><span class="badge neu">중립</span><span class="badge low">안정</span><span class="news-date">06.05</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">연관 종목</div>
+    <div style="margin-bottom:8px">
+      <div class="stock-row"><span class="stock-name">삼성전자 (005930)</span><span class="stock-change up">+1.8%</span></div>
+      <div class="stock-row"><span class="stock-name">SK하이닉스 (000660)</span><span class="stock-change up">+3.2%</span></div>
+      <div class="stock-row"><span class="stock-name">한미반도체 (042700)</span><span class="stock-change dn">-0.9%</span></div>
+    </div>
+    <div class="card-title" style="margin-top:10px">주요 키워드</div>
+    <div class="keywords">
+      <span class="kw">HBM</span><span class="kw">엔비디아</span><span class="kw">반도체</span>
+      <span class="kw">수출</span><span class="kw">AI</span><span class="kw">메모리</span>
+    </div>
+  </div>
+</div>
+
+<div class="summary-box">
+  <div class="summary-label">🤖 AI 시장 분위기 요약</div>
+  삼성전자·반도체 관련 뉴스 24건 분석 결과, 전체적으로 긍정 기조가 우세하나 레거시 재고 부담과 메모리 가격 하락 이슈가 혼재합니다. HBM 중심의 AI 수요 확대는 지속되고 있으며 단기 주의 구간으로 판단됩니다.
+</div>
+
+<script>
+const donut = new Chart(document.getElementById('donut'),{
+  type:'doughnut',
+  data:{
+    labels:['긍정','중립','부정'],
+    datasets:[{data:[14,4,6],backgroundColor:['#34d399','#475569','#f87171'],borderWidth:0,hoverOffset:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#6b7280',font:{size:10},boxWidth:10,padding:8}}}}
+});
+
+const days=[...Array(30)].map((_,i)=>{const d=new Date(2026,4,8+i);return `${d.getMonth()+1}/${d.getDate()}`});
+const prices=[71200,70800,72100,73500,72800,74200,75100,74600,76000,75400,77200,76800,78100,77500,79200,78600,80100,79400,81200,80500,82300,81700,83400,82800,84100,83500,85200,84600,86100,85400];
+const line = new Chart(document.getElementById('line'),{
+  type:'line',
+  data:{
+    labels:days,
+    datasets:[{label:'삼성전자',data:prices,borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.08)',borderWidth:2,pointRadius:0,fill:true,tension:.4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:5,font:{size:9}},grid:{color:'#f3f4f6'}},y:{ticks:{color:'#9ca3af',font:{size:9},callback:v=>v.toLocaleString()},grid:{color:'#f3f4f6'}}}}
+});
+
+const datasets=[
+  {kw:'카카오뱅크 금리',pos:8,neu:3,neg:7,risk:'주의',stocks:[{n:'카카오뱅크',c:'+0.5%',up:true},{n:'KB금융',c:'-0.3%',dn:true}],kws:['금리','예금','대출','핀테크'],news:[{h:'카카오뱅크, 정기예금 금리 0.2%p 인상',s:'pos',r:'low',d:'06.07'},{h:'인터넷은행 수신 경쟁 심화… 시중은행 압박',s:'pos',r:'low',d:'06.06'},{h:'연체율 소폭 상승… 리스크 관리 강화',s:'neg',r:'mid',d:'06.05'},{h:'카카오뱅크 2분기 순이익 전망 엇갈려',s:'neu',r:'low',d:'06.04'}],summary:'카카오뱅크·금리 관련 뉴스 18건 분석 결과, 수신 금리 경쟁 심화로 인한 긍정·부정 기조가 혼재합니다. 연체율 상승 이슈가 리스크 요인으로 작용하고 있어 주의 등급으로 판단됩니다.'},
+  {kw:'삼성전자 반도체',pos:14,neu:4,neg:6,risk:'주의',stocks:[{n:'삼성전자 (005930)',c:'+1.8%',up:true},{n:'SK하이닉스 (000660)',c:'+3.2%',up:true},{n:'한미반도체 (042700)',c:'-0.9%',up:false}],kws:['HBM','엔비디아','반도체','수출','AI','메모리'],news:[{h:'삼성전자, HBM3E 공급 계약 확대… 엔비디아향 물량 증가',s:'pos',r:'low',d:'06.07'},{h:'반도체 수출 5월 역대 최고… AI 수요 지속 확대',s:'pos',r:'low',d:'06.06'},{h:'메모리 가격 하락 압력 지속… 레거시 재고 부담',s:'neg',r:'mid',d:'06.05'},{h:'삼성전자 2분기 실적 발표 예정… 시장 기대치 혼재',s:'neu',r:'low',d:'06.05'}],summary:'삼성전자·반도체 관련 뉴스 24건 분석 결과, 전체적으로 긍정 기조가 우세하나 레거시 재고 부담과 메모리 가격 하락 이슈가 혼재합니다. HBM 중심의 AI 수요 확대는 지속되고 있으며 단기 주의 구간으로 판단됩니다.'},
+  {kw:'코스피 증시',pos:6,neu:8,neg:10,risk:'고위험',stocks:[{n:'KOSPI',c:'-1.2%',up:false},{n:'KODEX 200',c:'-1.0%',up:false}],kws:['외국인','매도','환율','미국','금리'],news:[{h:'외국인 코스피 4거래일 연속 순매도… 달러 강세 여파',s:'neg',r:'high',d:'06.07'},{h:'미 연준 금리 동결 시사에도 불확실성 지속',s:'neg',r:'mid',d:'06.06'},{h:'원달러 환율 1380원대 돌파… 수입물가 상승 우려',s:'neg',r:'high',d:'06.05'},{h:'코스피 기술적 지지선 주목… 저가 매수 유입 기대',s:'neu',r:'low',d:'06.04'}],summary:'코스피·증시 관련 뉴스 24건 분석 결과, 부정 기조가 우세합니다. 외국인 매도세 지속과 원달러 환율 상승이 주요 리스크 요인이며 고위험 구간으로 판단됩니다.'}
+];
+
+function simulate(){
+  const kw = document.getElementById('kw').value.trim();
+  const d = datasets.find(x=>x.kw===kw)||datasets[Math.floor(Math.random()*datasets.length)];
+  const total = d.pos+d.neu+d.neg;
+  const riskColor = d.risk==='고위험'?'#dc2626':d.risk==='주의'?'#d97706':'#059669';
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-label">수집 기사</div><div class="stat-val" style="color:#111827">${total}건</div></div>
+    <div class="stat"><div class="stat-label">긍정</div><div class="stat-val pos">${d.pos}</div></div>
+    <div class="stat"><div class="stat-label">부정</div><div class="stat-val neg">${d.neg}</div></div>
+    <div class="stat"><div class="stat-label">리스크 등급</div><div class="stat-val" style="color:${riskColor}">${d.risk}</div></div>`;
+  donut.data.datasets[0].data=[d.pos,d.neu,d.neg];donut.update();
+  document.getElementById('newsList').innerHTML=d.news.map(n=>`
+    <div class="news-item ${n.s}">
+      <div class="news-headline">${n.h}</div>
+      <div class="news-meta"><span class="badge ${n.s}">${n.s==='pos'?'긍정':n.s==='neg'?'부정':'중립'}</span><span class="badge ${n.r}">${n.r==='high'?'고위험':n.r==='mid'?'주의':'안정'}</span><span class="news-date">${n.d}</span></div>
+    </div>`).join('');
+  document.querySelector('.summary-box').innerHTML=`<div class="summary-label">🤖 AI 시장 분위기 요약</div>${d.summary}`;
+  document.querySelector('.card:nth-child(2) div').innerHTML=d.stocks.map(s=>`<div class="stock-row"><span class="stock-name">${s.n}</span><span class="stock-change ${s.up?'up':'dn'}">${s.c}</span></div>`).join('');
+  document.querySelector('.keywords').innerHTML=d.kws.map(k=>`<span class="kw">${k}</span>`).join('');
+}
+</script>
+</body>
+</html>
