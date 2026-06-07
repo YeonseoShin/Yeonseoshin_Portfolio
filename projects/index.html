@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금융 뉴스 경제 흐름 분석 — 미리보기</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --sidebar: #ffffff;
+    --card: #ffffff;
+    --border: #E2E8F0;
+    --text: #1E293B;
+    --sub: #64748B;
+    --meta: #94A3B8;
+    --accent: #6366F1;
+    --pos: #10B981;
+    --neg: #EF4444;
+    --neu: #94A3B8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* 사이드바 */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 1.4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .sidebar-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .sidebar label {
+    font-size: 0.72rem;
+    color: var(--sub);
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .sidebar input[type=text] {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+  }
+  .sidebar input[type=text]:focus { border-color: var(--accent); }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+  .quick-btn {
+    padding: 5px 4px;
+    font-size: 0.72rem;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: #F1F5F9;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+  }
+  .quick-btn:hover, .quick-btn.active {
+    background: #EEF2FF;
+    color: var(--accent);
+    border-color: #C7D2FE;
+  }
+  .sidebar hr { border: none; border-top: 1px solid var(--border); }
+  .slider-wrap { display: flex; flex-direction: column; gap: 4px; }
+  input[type=range] {
+    width: 100%; accent-color: var(--accent); cursor: pointer;
+  }
+  .slider-val {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-align: right;
+  }
+  .radio-group { display: flex; flex-direction: column; gap: 5px; }
+  .radio-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; cursor: pointer; }
+  .radio-item input { accent-color: var(--accent); cursor: pointer; }
+  .run-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .15s;
+    margin-top: auto;
+  }
+  .run-btn:hover { opacity: 0.88; }
+
+  /* 메인 */
+  .main {
+    flex: 1;
+    padding: 1.4rem 1.6rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  /* 헤더 */
+  .hero {
+    background: white;
+    border-radius: 14px;
+    padding: 1.3rem 1.8rem;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 1px 10px rgba(99,102,241,.07);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero h1 { font-size: 1.35rem; font-weight: 900; color: var(--text); }
+  .hero p  { font-size: 0.8rem; color: var(--sub); margin-top: 3px; }
+
+  /* 섹션 타이틀 */
+  .sec-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    border-left: 3px solid var(--accent);
+    padding-left: 9px;
+    margin-bottom: 0.7rem;
+  }
+
+  /* 지표 카드 */
+  .metrics { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+  .mcard {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 0.6rem;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 6px rgba(15,23,42,.05);
+  }
+  .mval { font-size: 1.6rem; font-weight: 900; }
+  .mlbl { font-size: 0.68rem; color: var(--meta); margin-top: 3px; }
+  .msub { font-size: 0.72rem; font-weight: 600; margin-top: 2px; }
+  .cpos { color: var(--pos); } .cneg { color: var(--neg); }
+  .cneu { color: var(--neu); } .cdrk { color: var(--text); }
+
+  /* AI 분석 */
+  .ai-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .aicard {
+    background: linear-gradient(135deg,#EFF6FF,#F0FDF4);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 13px;
+    padding: 1.1rem 1.3rem;
+  }
+  .aicard h4 { color: #1D4ED8; font-size: 0.82rem; margin-bottom: 0.5rem; font-weight: 700; }
+  .aicard p  { color: var(--text); font-size: 0.82rem; line-height: 1.75; }
+  .issuecard {
+    background: white;
+    border-radius: 13px;
+    border-left: 4px solid var(--accent);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.3rem;
+  }
+  .issuecard h4 { color: var(--accent); font-size: 0.82rem; margin-bottom: 0.5rem; font-weight: 700; }
+  .issuecard p  { color: #334155; font-size: 0.82rem; line-height: 1.75; }
+
+  /* 리스크 배너 */
+  .risk-banner {
+    border-radius: 11px;
+    padding: 0.85rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .risk-banner.warn {
+    background: #FEF9C3;
+    border: 1.5px solid #F59E0B;
+  }
+  .risk-banner .risk-grade { font-weight: 700; font-size: 0.88rem; color: #92400E; }
+  .risk-banner .risk-kws   { font-size: 0.78rem; color: #92400E; margin-top: 3px; }
+
+  /* 차트 행 */
+  .chart-row { display: grid; grid-template-columns: 1fr 1.2fr 1.8fr; gap: 12px; }
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 1rem;
+    box-shadow: 0 1px 6px rgba(15,23,42,.04);
+  }
+  .chart-card .ctitle {
+    font-size: 0.75rem;
+    color: var(--sub);
+    text-align: center;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+
+  /* 주가 + 키워드 */
+  .bottom-row { display: grid; grid-template-columns: 1.7fr 1fr; gap: 12px; }
+
+  /* 뉴스 목록 */
+  .news-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+  }
+  .news-filters select {
+    padding: 5px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+    outline: none;
+  }
+  .news-count { font-size: 0.75rem; color: var(--meta); margin-bottom: 0.5rem; }
+  .nitem {
+    background: white;
+    border-radius: 9px;
+    padding: 0.75rem 0.9rem;
+    margin-bottom: 0.4rem;
+    border-left: 3px solid var(--border);
+    border: 1px solid var(--border);
+    border-left-width: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    transition: transform .15s, box-shadow .15s;
+    cursor: default;
+  }
+  .nitem:hover { transform: translateX(2px); box-shadow: 0 3px 12px rgba(15,23,42,.08); }
+  .nitem-title { font-weight: 600; font-size: 0.84rem; color: var(--text); }
+  .nitem-meta  { font-size: 0.68rem; color: var(--meta); margin-top: 4px; }
+  .badge {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .bpos { background: #D1FAE5; color: #065F46; }
+  .bneg { background: #FEE2E2; color: #991B1B; }
+  .bneu { background: #F1F5F9; color: #475569; }
+
+  .divider { border: none; border-top: 1px solid var(--border); }
+
+  /* 다크모드 토글 */
+  .dark body { --bg:#0F172A; --sidebar:#1E293B; --card:#1E293B; --border:#334155; --text:#F1F5F9; --sub:#94A3B8; --meta:#64748B; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 사이드바 -->
+<aside class="sidebar">
+  <div>
+    <div class="sidebar-title">📈 분석 설정</div>
+  </div>
+  <hr>
+  <div>
+    <label>검색 키워드</label>
+    <input type="text" id="keyword-input" value="금리 인상">
+  </div>
+  <div>
+    <label>빠른 선택</label>
+    <div class="quick-grid">
+      <button class="quick-btn active" onclick="setKeyword(this,'금리 인상')">금리 인상</button>
+      <button class="quick-btn" onclick="setKeyword(this,'배당주')">배당주</button>
+      <button class="quick-btn" onclick="setKeyword(this,'반도체')">반도체</button>
+      <button class="quick-btn" onclick="setKeyword(this,'환율')">환율</button>
+      <button class="quick-btn" onclick="setKeyword(this,'코스피')">코스피</button>
+      <button class="quick-btn" onclick="setKeyword(this,'부동산 PF')">부동산 PF</button>
+    </div>
+  </div>
+  <hr>
+  <div class="slider-wrap">
+    <label>수집 기간 (일)</label>
+    <input type="range" min="1" max="30" value="7" id="days-range"
+           oninput="document.getElementById('days-val').textContent=this.value+'일'">
+    <div class="slider-val" id="days-val">7일</div>
+  </div>
+  <div>
+    <label>분석 모델</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="model" checked> 🤗 KR-FinBert (무료)
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="model"> ✨ OpenAI GPT
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="model"> 📋 키워드 기반 (빠름)
+      </label>
+    </div>
+  </div>
+  <hr>
+  <button class="run-btn" onclick="runDemo()">🚀 분석 시작</button>
+</aside>
+
+<!-- 메인 -->
+<main class="main">
+
+  <!-- 헤더 -->
+  <div class="hero">
+    <span style="font-size:1.8rem">📈</span>
+    <div>
+      <h1>금융 뉴스 경제 흐름 분석</h1>
+      <p>네이버 뉴스 기사를 AI로 분석해 시장 분위기와 핵심 이슈를 파악합니다</p>
+    </div>
+  </div>
+
+  <!-- 지표 -->
+  <div>
+    <div class="sec-title">🔍 금리 인상 분석 결과</div>
+    <div class="metrics">
+      <div class="mcard"><div class="mval cdrk">50건</div><div class="mlbl">수집 기사</div></div>
+      <div class="mcard"><div class="mval cpos">8건</div><div class="mlbl">😊 긍정</div><div class="msub cpos">+16.0%</div></div>
+      <div class="mcard"><div class="mval cneu">35건</div><div class="mlbl">😐 중립</div></div>
+      <div class="mcard"><div class="mval cneg">7건</div><div class="mlbl">😟 부정</div><div class="msub cneg">14.0%</div></div>
+      <div class="mcard"><div class="mval cpos">16.0%</div><div class="mlbl">긍정 지수</div></div>
+    </div>
+  </div>
+
+  <!-- AI 분석 -->
+  <div>
+    <div class="sec-title">🤖 AI 경제 흐름 분석</div>
+    <div class="ai-row">
+      <div class="aicard">
+        <h4>📊 종합 흐름 요약</h4>
+        <p>'금리 인상' 관련 최근 50건 기사 분석 결과, 시장 분위기는 <strong>다소 긍정적</strong>으로 나타났습니다. 긍정 8건(16.0%) · 중립 35건 · 부정 7건(14.0%)이며, 한국은행의 동결 기조 속에서 미 연준의 향후 금리 경로에 대한 관망세가 지속되고 있습니다. 긍정 기사가 우세하나 불확실성도 공존합니다.</p>
+      </div>
+      <div class="issuecard">
+        <h4>📌 핵심 이슈 & 주요 기사</h4>
+        <p>
+          • 삼성전자·SK하이닉스 매도 vs 매수…수급 재편 신호<br>
+          • 한국은행 금통위, 기준금리 3.0% 동결 결정<br>
+          • 미 연준 의사록 공개…'인하 신중론' 재확인<br>
+          • 코스피, 외국인 순매수에 2,650선 회복<br>
+          • 원·달러 환율 1,380원대…수출 기업 수혜 기대
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 배너 -->
+  <div class="risk-banner warn">
+    <div>
+      <div class="risk-grade">🟡 리스크 등급: 주의 &nbsp;|&nbsp; 위험 점수: 32점</div>
+      <div class="risk-kws">
+        🔴 고위험 키워드: <strong>급락(3회)</strong>, <strong>위기(2회)</strong> &nbsp;&nbsp;
+        🟡 주의 키워드: 우려(8회), 불안(5회), 약세(4회)
+      </div>
+    </div>
+  </div>
+
+  <!-- 차트 행 -->
+  <div>
+    <div class="sec-title">📊 경제 흐름 차트</div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="ctitle">긍정 비율</div>
+        <canvas id="gaugeChart" height="160"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="ctitle">심리 분포</div>
+        <canvas id="pieChart" height="160"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="ctitle">일자별 심리 추이</div>
+        <canvas id="lineChart" height="160"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 주가 + 종목 언급 -->
+  <div>
+    <div class="sec-title">📉 금융 심층 분석</div>
+    <div class="bottom-row">
+      <div class="chart-card">
+        <div class="ctitle">KB금융 주가 (+2.3%, 30일)</div>
+        <canvas id="stockChart" height="140"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="ctitle">종목별 언급 빈도</div>
+        <canvas id="mentionChart" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 키워드 -->
+  <div>
+    <div class="sec-title">🔤 연관 키워드 Top 10</div>
+    <div class="chart-card">
+      <canvas id="keywordChart" height="80"></canvas>
+    </div>
+  </div>
+
+  <!-- 기사 목록 -->
+  <div>
+    <hr class="divider" style="margin-bottom:1rem">
+    <div class="sec-title">📋 수집 기사 목록</div>
+    <div class="news-filters">
+      <select><option>전체</option><option>긍정</option><option>중립</option><option>부정</option></select>
+      <select><option>최신순</option><option>긍정순</option><option>부정순</option></select>
+      <select><option>20건</option><option>30건</option><option>50건</option></select>
+    </div>
+    <div class="news-count">총 50건</div>
+    <div id="news-list"></div>
+  </div>
+
+</main>
+
+<script>
+const ARTICLES = [
+  { title: "한국은행 기준금리 3.0% 동결…'신중한 인하' 시사", source: "한국경제", date: "2026-05-30", s: "pos" },
+  { title: "미 연준 의사록 공개…금리 인하 속도 조절론 확산", source: "매일경제", date: "2026-05-30", s: "neu" },
+  { title: "코스피 2,650선 회복…외국인 3거래일 연속 순매수", source: "이데일리", date: "2026-05-29", s: "pos" },
+  { title: "원·달러 환율 1,380원대…수출 기업 수혜 기대감↑", source: "서울경제", date: "2026-05-29", s: "pos" },
+  { title: "삼성전자, 2분기 실적 개선 전망…반도체 업황 회복세", source: "한국경제", date: "2026-05-28", s: "pos" },
+  { title: "국고채 금리 상승…시장 불안 심리 반영", source: "연합인포맥스", date: "2026-05-28", s: "neg" },
+  { title: "IMF, 한국 성장률 2.3% 전망 유지", source: "뉴시스", date: "2026-05-27", s: "neu" },
+  { title: "가계부채 증가세 지속…금융당국 선제 대응 촉구", source: "파이낸셜뉴스", date: "2026-05-27", s: "neg" },
+  { title: "KB금융, 1분기 순이익 1.8조…역대 최대", source: "머니투데이", date: "2026-05-26", s: "pos" },
+  { title: "부동산 PF 리스크 지속…건설사 신용등급 하향 압박", source: "한국경제", date: "2026-05-26", s: "neg" },
+];
+
+const BORDER_COLOR = { pos: "#10B981", neg: "#EF4444", neu: "#E2E8F0" };
+const BADGE_CLASS  = { pos: "bpos", neg: "bneg", neu: "bneu" };
+const BADGE_TEXT   = { pos: "😊 긍정", neg: "😟 부정", neu: "😐 중립" };
+
+function renderNews() {
+  const list = document.getElementById("news-list");
+  list.innerHTML = ARTICLES.map(a => `
+    <div class="nitem" style="border-left-color:${BORDER_COLOR[a.s]}">
+      <div style="flex:1">
+        <div class="nitem-title">${a.title}</div>
+        <div class="nitem-meta">📌 ${a.source} · 📅 ${a.date}</div>
+      </div>
+      <span class="badge ${BADGE_CLASS[a.s]}">${BADGE_TEXT[a.s]}</span>
+    </div>
+  `).join("");
+}
+
+function setKeyword(btn, kw) {
+  document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("keyword-input").value = kw;
+}
+
+function runDemo() {
+  const btn = document.querySelector(".run-btn");
+  btn.textContent = "⏳ 분석 중...";
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = "✅ 분석 완료!";
+    setTimeout(() => { btn.textContent = "🚀 분석 시작"; btn.disabled = false; }, 1200);
+  }, 1800);
+}
+
+// 차트들
+window.addEventListener("load", () => {
+  renderNews();
+
+  // 게이지 (도넛으로 대체)
+  new Chart(document.getElementById("gaugeChart"), {
+    type: "doughnut",
+    data: {
+      datasets: [{
+        data: [16, 84],
+        backgroundColor: ["#10B981", "#F1F5F9"],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: 270,
+      }]
+    },
+    options: {
+      cutout: "72%",
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+      },
+      layout: { padding: { bottom: 0 } }
+    },
+    plugins: [{
+      id: "gaugeText",
+      afterDraw(chart) {
+        const { ctx, chartArea: { top, width, height } } = chart;
+        ctx.save();
+        ctx.font = "bold 22px Noto Sans KR, sans-serif";
+        ctx.fillStyle = "#1E293B";
+        ctx.textAlign = "center";
+        ctx.fillText("16%", width / 2 + chart.chartArea.left, top + height * 0.62);
+        ctx.font = "11px Noto Sans KR";
+        ctx.fillStyle = "#94A3B8";
+        ctx.fillText("긍정 비율", width / 2 + chart.chartArea.left, top + height * 0.82);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // 파이차트
+  new Chart(document.getElementById("pieChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["긍정","중립","부정"],
+      datasets: [{
+        data: [8, 35, 7],
+        backgroundColor: ["#10B981","#94A3B8","#EF4444"],
+        borderWidth: 3,
+        borderColor: "#fff",
+      }]
+    },
+    options: {
+      cutout: "60%",
+      plugins: {
+        legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}건` } }
+      }
+    }
+  });
+
+  // 라인차트
+  const days = ["05/24","05/25","05/26","05/27","05/28","05/29","05/30"];
+  new Chart(document.getElementById("lineChart"), {
+    type: "line",
+    data: {
+      labels: days,
+      datasets: [
+        { label:"긍정", data:[2,1,3,1,2,3,2], borderColor:"#10B981", backgroundColor:"rgba(16,185,129,0.07)", fill:true, tension:0.4, pointRadius:4, borderWidth:2 },
+        { label:"중립", data:[4,5,6,5,5,6,5], borderColor:"#94A3B8", backgroundColor:"rgba(148,163,184,0.05)", fill:true, tension:0.4, pointRadius:4, borderWidth:2 },
+        { label:"부정", data:[1,2,1,2,1,1,2], borderColor:"#EF4444", backgroundColor:"rgba(239,68,68,0.07)", fill:true, tension:0.4, pointRadius:4, borderWidth:2 },
+      ]
+    },
+    options: {
+      plugins: { legend: { position:"bottom", labels:{ boxWidth:10, font:{ size:11 } } } },
+      scales: {
+        x: { grid:{ color:"#F1F5F9" }, ticks:{ font:{ size:10 } } },
+        y: { grid:{ color:"#F1F5F9" }, ticks:{ font:{ size:10 } }, beginAtZero:true }
+      }
+    }
+  });
+
+  // 주가차트
+  const prices = [58200,58800,59100,58600,59400,60100,59700,60300,60800,61200,60900,61500,62000,61800,62300,62800,62500,63100,63400,62900,63500,64000,63700,64200,64500,64100,64600,65000,64800,65200];
+  new Chart(document.getElementById("stockChart"), {
+    type: "line",
+    data: {
+      labels: Array.from({length:30},(_,i)=>{const d=new Date("2026-05-01");d.setDate(d.getDate()+i);return `${d.getMonth()+1}/${d.getDate()}`}),
+      datasets: [{
+        label:"KB금융", data:prices,
+        borderColor:"#6366F1", backgroundColor:"rgba(99,102,241,0.06)",
+        fill:true, tension:0.4, pointRadius:0, borderWidth:2.5,
+      }]
+    },
+    options: {
+      plugins: { legend:{ display:false } },
+      scales: {
+        x: { grid:{ display:false }, ticks:{ maxTicksLimit:6, font:{ size:9 } } },
+        y: { grid:{ color:"#F1F5F9" }, ticks:{ font:{ size:9 }, callback: v=>(v/1000).toFixed(0)+'k' } }
+      }
+    }
+  });
+
+  // 종목 언급 빈도
+  new Chart(document.getElementById("mentionChart"), {
+    type: "bar",
+    data: {
+      labels: ["삼성전자","KB금융","신한지주","SK하이닉스","하나금융"],
+      datasets: [{
+        data: [18,14,11,9,7],
+        backgroundColor: ["rgba(16,185,129,0.85)","rgba(16,185,129,0.68)","rgba(16,185,129,0.54)","rgba(16,185,129,0.42)","rgba(16,185,129,0.32)"],
+        borderWidth: 0, borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: "y",
+      plugins: { legend:{ display:false } },
+      scales: {
+        x: { grid:{ color:"#F1F5F9" }, ticks:{ font:{ size:9 } } },
+        y: { ticks:{ font:{ size:10 } } }
+      }
+    }
+  });
+
+  // 키워드 바
+  new Chart(document.getElementById("keywordChart"), {
+    type: "bar",
+    data: {
+      labels: ["기준금리","한국은행","인플레이션","연방준비제도","코스피","트럼프","반도체","뉴욕증시","금리인상","경제성장"],
+      datasets: [{
+        data: [15,12,10,9,8,7,7,6,6,5],
+        backgroundColor: labels => {
+          const v = [0.9,0.8,0.72,0.65,0.58,0.52,0.48,0.44,0.4,0.36];
+          return v.map(a=>`rgba(99,102,241,${a})`);
+        },
+        borderWidth: 0, borderRadius: 3,
+      }]
+    },
+    options: {
+      plugins: { legend:{ display:false } },
+      scales: {
+        x: { ticks:{ font:{ size:10 } } },
+        y: { grid:{ color:"#F1F5F9" }, ticks:{ font:{ size:9 } } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

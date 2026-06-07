@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>신연서 | IT 기획 · Data-Driven Developer</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"/>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="transition-overlay" id="overlay"></div>
+
+<nav id="nav" class="dark-nav">
+  <a href="#hero" class="nav-logo">YS</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#activity">Activity</a></li>
+    <li><a href="#projects">Projects</a></li>
+  </ul>
+  <a href="mailto:shinalicelife@naver.com" class="nav-cta">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">IT Service Planning · Data Analysis · AI Development</div>
+    <h1 class="hero-name">
+      Yeonseo
+      <span class="hero-name-sub">Shin</span>
+    </h1>
+    <p class="hero-kr">신연서</p>
+    <p class="hero-role">데이터로 문제를 정의하고, 서비스로 구현합니다.</p>
+    <p class="hero-desc">금융 데이터 분석부터 AI 서비스 역기획까지,<br/>흩어진 데이터를 사람이 이해할 수 있는<br/>인터페이스로 연결합니다.</p>
+    <div class="hero-chips">
+      <span class="hchip">🎓 고려대학교</span>
+      <span class="hchip">🏃 러닝</span>
+      <span class="hchip">🎷 재즈</span>
+      <span class="hchip">🧩 ISTJ</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">프로젝트 보기 ↓</a>
+      <a href="https://github.com/YeonseoShin" target="_blank" class="btn-secondary">GitHub →</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section-wrap">
+  <div class="inner">
+    <div class="section-tag reveal">About</div>
+    <h2 class="section-title reveal">소개</h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>고려대학교 영어교육과(본전공)·데이터과학과(이중전공) 재학 중이며, 2027년 2월 졸업 예정입니다.</p>
+        <p>공공 데이터, 금융 데이터, AI API를 활용해 실제로 동작하는 서비스를 기획하고 구현하는 데 집중하고 있습니다. 예금보험공사 공모전에서 금융권역별 안정성을 수치화한 대시보드로 장려상을 받았고, AI 기반 금융 뉴스 감성 분석 시스템과 영어 회화 튜터 서비스를 1인으로 개발했습니다. 카카오 카나나 서비스를 역기획해 글로벌 AI 서비스와 비교 분석하고 개선 기능을 정의한 기획 프로젝트도 수행했습니다.</p>
+        <p>기능 구현에 그치지 않고, 데이터를 어떻게 해석하고 어떤 인터페이스로 전달할지에 집중합니다. 데이터 파이프라인과 사용자 경험이 자연스럽게 이어지는 서비스를 만드는 개발자가 되는 것이 목표입니다.</p>
+        <div class="about-tags">
+          <span class="tag">IT 서비스 기획</span>
+          <span class="tag">Python · pandas</span>
+          <span class="tag">Chart.js · Plotly</span>
+          <span class="tag">Vanilla JS</span>
+          <span class="tag">Node.js · Express</span>
+          <span class="tag">HuggingFace</span>
+          <span class="tag">Claude API</span>
+          <span class="tag">OpenAI API</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">SQL · ADsP</span>
+        </div>
+      </div>
+      <div class="info-grid reveal">
+        <div class="info-card">
+          <div class="info-label">Education</div>
+          <div class="info-val">고려대학교</div>
+          <div class="info-sub">영어교육과 (본전공) · 데이터과학과 (이중전공)</div>
+          <div class="info-sub" style="margin-top:.25rem">2023.03 입학 · 2027.02 졸업 예정</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Overseas</div>
+          <div class="info-val">UCLA 교환학생</div>
+          <div class="info-sub">2025.09 ~ 2025.12 · 통계학 &amp; 데이터사이언스</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Language</div>
+          <div class="cred-row"><span class="cred-name">OPIc</span><span class="cred-val accent">AL</span></div>
+          <div class="cred-row"><span class="cred-name">TOEIC</span><span class="cred-val">970</span></div>
+          <div class="cred-row"><span class="cred-name">IELTS</span><span class="cred-val">7.0</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Certifications</div>
+          <div class="cred-row"><span class="cred-name">ADsP</span><span class="cred-date">2025.03</span></div>
+          <div class="cred-row"><span class="cred-name">SQL 개발자</span><span class="cred-date">2025.04</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Contact</div>
+          <div class="info-val" style="font-size:14px">shinalicelife@naver.com</div>
+          <div class="info-sub">010-5942-3623</div>
+          <div class="info-sub" style="margin-top:.2rem"><a href="https://github.com/YeonseoShin" target="_blank" style="color:var(--accent)">github.com/YeonseoShin</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITY -->
+<section id="activity" class="section-wrap gray">
+  <div class="inner">
+    <div class="section-tag reveal">Activity</div>
+    <h2 class="section-title reveal">활동 이력</h2>
+    <div class="activity-list">
+      <div class="activity-item hl reveal">
+        <div class="act-date">2026.01 ~ 02</div>
+        <div>
+          <div class="act-title">카카오 카나나 AI 메이트 역기획 프로젝트 <span class="abadge abadge-blue">AI 기획</span></div>
+          <div class="act-desc">실리콘밸리 현지 방문 경험을 바탕으로 카카오 카나나를 역기획 방법론으로 분석했습니다. ChatGPT와 8개 시나리오를 직접 비교 테스트하고, HuggingFace에 공개된 Kanana 오픈소스 모델의 아키텍처를 분석해 6개 TO-BE 개선 기능을 정의하고 인터랙티브 프로토타입을 구현했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item reveal">
+        <div class="act-date">2026.01 ~ 02</div>
+        <div>
+          <div class="act-title">여명학교 방과후 영어 멘토링 수업 (봉사 60시간)</div>
+          <div class="act-desc">탈북 청소년 및 제3국 출생 탈북민 자녀를 대상으로 영어 교과 수업을 진행했습니다. 학생 개별 학습 수준을 분석해 맞춤형 교재를 직접 제작하고 수업을 운영했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item hl reveal">
+        <div class="act-date">2025.09 ~ 12</div>
+        <div>
+          <div class="act-title">한미첨단분야 청년교류 지원사업 제3기 장학생 <span class="abadge abadge-teal">장학</span></div>
+          <div class="act-desc">AI and Cybersecurity in Silicon Valley 테마로 Juniper Networks, 산호세 주립대학교 연구소 등 미국 현지 기업 및 연구 현장을 방문했습니다. UCLA 교환학생으로 파견되어 통계학·데이터사이언스 관련 전공 수업을 영어로 수강하고 다국적 팀 프로젝트를 수행했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item hl reveal">
+        <div class="act-date">2025.08</div>
+        <div>
+          <div class="act-title">예금보험공사 공공데이터 활용 아이디어 공모전 <span class="abadge abadge-gold">장려상</span></div>
+          <div class="act-desc">금융권역별 안정성 리포트 자동생성 서비스를 기획하고 개발했습니다. 금융감독원·예금보험공사 Open API를 활용해 권역별 주요 건전성 지표를 시각화한 리포트 시스템을 1인으로 수행했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item reveal">
+        <div class="act-date">2025.03 ~ 06</div>
+        <div>
+          <div class="act-title">파이낸셜 와이드 대학생 기자단 1기</div>
+          <div class="act-desc">IT과학부 대학생 기자로 활동했습니다. AI 기술, 디지털 자산, 금융 정책 등 금융권의 디지털 전환 트렌드를 취재하고 기사를 작성했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item reveal">
+        <div class="act-date">2024.02</div>
+        <div>
+          <div class="act-title">2023학년도 2학기 학업 성적 우수 학장상 <span class="abadge abadge-gold">GPA 4.5/4.5</span></div>
+          <div class="act-desc">2023학년도 2학기 전 과목 A+를 달성해 학업 성적 우수 학장상을 수상했습니다.</div>
+        </div>
+      </div>
+      <div class="activity-item reveal">
+        <div class="act-date">2023.03</div>
+        <div>
+          <div class="act-title">고려대학교 입학</div>
+          <div class="act-desc">영어교육과 본전공·데이터과학과 이중전공으로 입학했습니다. 언어학·교육학 기반의 영어교육 전공과 데이터 구조·알고리즘·머신러닝 기반의 데이터과학을 병행하고 있습니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="section-wrap">
+  <div class="inner">
+    <div class="section-tag reveal">Projects</div>
+    <h2 class="section-title reveal">주요 프로젝트</h2>
+    <div class="projects-list">
+
+      <!-- KDIC -->
+      <div class="project-card reveal">
+        <div class="card-body">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-title">금융권역별 안정성 리포트 대시보드</div>
+              <div class="card-date">2025.06 ~ 2025.08 · 1인 프로젝트</div>
+            </div>
+            <div class="card-badges">
+              <span class="cbadge cbadge-award">🏆 공모전 장려상</span>
+              <span class="cbadge cbadge-data">데이터 분석</span>
+              <span class="cbadge cbadge-dev">Full-stack</span>
+            </div>
+          </div>
+          <div class="card-meta">Python · pandas · Chart.js · 예금보험공사 Open API · 금융감독원 Open API · Vanilla JS</div>
+          <div class="case-strip">
+            <div class="cs-cell"><div class="cs-label">문제 정의</div><div class="cs-text">기관마다 API 응답 구조가 달라 금융권역 간 안정성을 통합 비교하기 어려운 문제</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">해결 과정</div><div class="cs-text">각 API를 직접 파싱해 단일 구조로 정규화. 출연금·보험금지급·회수율 3개 지표를 가중합산한 TrustScore 알고리즘 직접 설계</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">결과</div><div class="cs-text">예금보험공사 공공데이터 활용 아이디어 공모전 장려상 수상. 6개 금융권역 안정성 지표를 하나의 대시보드에서 비교 가능</div></div>
+          </div>
+          <p class="card-desc">금융권역별 주요 건전성 지표(출연금 납부율, 보험금 지급 회수율, 부실 금융기관 비율)를 가중합산한 자체 TrustScore 알고리즘으로 은행·보험·저축은행·금융투자·상호금융·여신 6개 권역의 안정성을 단일 수치로 시각화합니다. 연도별 데이터 전환 및 PDF·CSV·JSON 내보내기 기능을 포함합니다.</p>
+          <div class="kpi-row">
+            <div class="kpi"><div class="kpi-val">6</div><div class="kpi-label">분석 금융권역</div></div>
+            <div class="kpi"><div class="kpi-val">TrustScore™</div><div class="kpi-label">자체 알고리즘</div></div>
+            <div class="kpi"><div class="kpi-val">3종</div><div class="kpi-label">내보내기 포맷</div></div>
+            <div class="kpi"><div class="kpi-val">🏆</div><div class="kpi-label">공모전 장려상</div></div>
+          </div>
+          <div class="role-box">
+            <div class="role-title">수행 역할 (1인 프로젝트)</div>
+            <div class="role-grid">
+              <div class="role-item"><span class="rdot"></span>기획 및 전체 개발</div>
+              <div class="role-item"><span class="rdot"></span>공공 API 파싱·정규화 파이프라인</div>
+              <div class="role-item"><span class="rdot"></span>TrustScore 알고리즘 설계</div>
+              <div class="role-item"><span class="rdot"></span>Chart.js 인터랙티브 시각화</div>
+              <div class="role-item"><span class="rdot"></span>연도별 데이터 전환 UI</div>
+              <div class="role-item"><span class="rdot"></span>PDF·CSV·JSON 내보내기</div>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="abtn abtn-preview" onclick="togglePanel('pv-kdic',this)">▶ 미리보기</button>
+          <a class="abtn abtn-github" href="https://github.com/YeonseoShin/kdic-dashboard" target="_blank">⌥ GitHub</a>
+          <a class="abtn abtn-detail" href="projects/kdic/index.html" target="_blank">🔗 웹사이트 방문</a>
+        </div>
+        <div class="panel" id="pv-kdic">
+          <div class="browser-bar">
+            <span class="bdot" style="background:#ef4444"></span>
+            <span class="bdot" style="background:#f59e0b"></span>
+            <span class="bdot" style="background:#10b981"></span>
+            <span class="burl">projects/kdic/index.html</span>
+          </div>
+          <iframe src="projects/kdic/index.html" style="width:100%;height:560px;border:none;display:block;" title="금융권역별 안정성 리포트 미리보기"></iframe>
+        </div>
+      </div>
+
+      <!-- 금융뉴스 -->
+      <div class="project-card reveal">
+        <div class="card-body">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-title">금융 뉴스 경제 흐름 분석 대시보드</div>
+              <div class="card-date">2025.03 ~ 2025.06 · 1인 프로젝트</div>
+            </div>
+            <div class="card-badges">
+              <span class="cbadge cbadge-data">데이터 분석</span>
+              <span class="cbadge cbadge-ai">AI 모델</span>
+              <span class="cbadge cbadge-dev">Full-stack</span>
+            </div>
+          </div>
+          <div class="card-meta">Python · Streamlit · HuggingFace · KR-FinBert · 네이버 뉴스 API · yfinance · Plotly · KoNLPy · ReportLab</div>
+          <div class="case-strip">
+            <div class="cs-cell"><div class="cs-label">문제 정의</div><div class="cs-text">범용 감성 분석 모델은 금융 맥락을 반영하지 못해 "손실 축소" 같은 긍정 신호도 부정으로 분류하는 문제</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">해결 과정</div><div class="cs-text">금융 도메인 특화 KR-FinBert 선택. 뉴스 수집·형태소 분석·종목 추출·주가 연동·리스크 등급 산출까지 전체 파이프라인 직접 구현</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">결과</div><div class="cs-text">키워드 기반 최대 50건 기사 수집 후 긍정·중립·부정 분류, 30일 주가 차트, 리스크 등급, PDF/CSV/JSON 내보내기까지 원스톱 제공</div></div>
+          </div>
+          <p class="card-desc">네이버 뉴스 검색 API로 수집한 금융 기사를 KR-FinBert(snunlp/KR-FinBert-SC)로 긍정·중립·부정 분류합니다. KoNLPy 형태소 분석으로 연관 키워드와 종목 언급 빈도를 추출하고, yfinance로 해당 종목의 30일 주가 차트를 자동 표시합니다. 리스크 키워드 감지로 안정·주의·고위험 등급을 산출하며, GPT 기반 시장 분위기 종합 요약도 제공합니다.</p>
+          <div class="kpi-row">
+            <div class="kpi"><div class="kpi-val">KR-FinBert</div><div class="kpi-label">금융 특화 AI 모델</div></div>
+            <div class="kpi"><div class="kpi-val">50건</div><div class="kpi-label">최대 기사 수집</div></div>
+            <div class="kpi"><div class="kpi-val">3단계</div><div class="kpi-label">리스크 등급 산출</div></div>
+            <div class="kpi"><div class="kpi-val">3종</div><div class="kpi-label">내보내기 포맷</div></div>
+          </div>
+          <div class="role-box">
+            <div class="role-title">수행 역할 (1인 프로젝트)</div>
+            <div class="role-grid">
+              <div class="role-item"><span class="rdot"></span>기획 및 전체 개발</div>
+              <div class="role-item"><span class="rdot"></span>네이버 API 뉴스 수집 파이프라인</div>
+              <div class="role-item"><span class="rdot"></span>KR-FinBert 감성 분석 모듈</div>
+              <div class="role-item"><span class="rdot"></span>KoNLPy 형태소 분석·키워드 추출</div>
+              <div class="role-item"><span class="rdot"></span>yfinance 주가 연동·시각화</div>
+              <div class="role-item"><span class="rdot"></span>Streamlit 대시보드 UI</div>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <a class="abtn abtn-github" href="https://github.com/YeonseoShin/financial-news-dashboard" target="_blank">⌥ GitHub</a>
+          <a class="abtn abtn-detail" href="projects/news-detail/index.html" target="_blank">📋 프로젝트 상세</a>
+        </div>
+      </div>
+
+      <!-- 카나나 -->
+      <div class="project-card featured reveal">
+        <div class="feat-bar">IT 기획 프로젝트</div>
+        <div class="card-body">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-title">카카오 카나나 AI 메이트 역기획</div>
+              <div class="card-date">2026.01 ~ 2026.02 · 1인 프로젝트</div>
+            </div>
+            <div class="card-badges">
+              <span class="cbadge cbadge-plan">IT 기획</span>
+              <span class="cbadge cbadge-ai">AI 분석</span>
+              <span class="cbadge cbadge-dev">프로토타입</span>
+            </div>
+          </div>
+          <div class="card-meta">역기획 · UX 분석 · 기능 정의서 · Claude API · HuggingFace · Vanilla JS · HTML/CSS</div>
+          <div class="case-strip">
+            <div class="cs-cell"><div class="cs-label">문제 정의</div><div class="cs-text">카나나가 에이전틱 실행·안전 가이드라인·전문성 깊이 측면에서 ChatGPT 대비 어떤 Gap이 있는지 데이터 기반으로 분석 필요</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">해결 과정</div><div class="cs-text">동일 프롬프트 8개를 카나나·ChatGPT에 직접 입력해 비교 테스트. HuggingFace Kanana 모델 아키텍처 직접 분석. 6개 TO-BE 기능 18개 요구사항으로 명세화</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">결과</div><div class="cs-text">역기획서·글로벌 비교 분석·기능 정의서·인터랙티브 프로토타입·발표 PPT 5개 산출물 완성. Claude/OpenAI API 실제 연동 프로토타입 구현</div></div>
+          </div>
+          <p class="card-desc">카카오 카나나 서비스를 역기획 방법론으로 분석하고 ChatGPT·Meta AI·Character.ai와 8개 평가 축으로 비교했습니다. HuggingFace에 공개된 Kanana-2(MoE 아키텍처, 30B-A3B)·Safeguard 모델을 직접 분석해 기술 전략을 파악하고, 에이전틱 실행·위기 감지·전문가 모드 등 6개 TO-BE 기능을 기능 정의서로 명세화했습니다.</p>
+          <div class="kpi-row">
+            <div class="kpi"><div class="kpi-val">8</div><div class="kpi-label">직접 테스트 시나리오</div></div>
+            <div class="kpi"><div class="kpi-val">4종</div><div class="kpi-label">글로벌 서비스 비교</div></div>
+            <div class="kpi"><div class="kpi-val">6개</div><div class="kpi-label">TO-BE 개선 기능</div></div>
+            <div class="kpi"><div class="kpi-val">18개</div><div class="kpi-label">세부 요구사항</div></div>
+          </div>
+          <div class="role-box">
+            <div class="role-title">수행 역할 (1인 기획 프로젝트)</div>
+            <div class="role-grid">
+              <div class="role-item"><span class="rdot"></span>역기획서 작성 (AS-IS 분석)</div>
+              <div class="role-item"><span class="rdot"></span>글로벌 비교 분석 (8개 평가 축)</div>
+              <div class="role-item"><span class="rdot"></span>Kanana 오픈소스 모델 분석</div>
+              <div class="role-item"><span class="rdot"></span>기능 정의서 (18개 요구사항)</div>
+              <div class="role-item"><span class="rdot"></span>인터랙티브 프로토타입 구현</div>
+              <div class="role-item"><span class="rdot"></span>포트폴리오 발표 PPT</div>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <a class="abtn abtn-github" href="https://github.com/YeonseoShin" target="_blank">⌥ GitHub</a>
+          <a class="abtn abtn-detail" href="projects/kanana/index.html" target="_blank">📋 리포트 요약</a>
+          <a class="abtn abtn-proto" href="kanana-prototype.html" target="_blank">🚀 프로토타입 체험</a>
+        </div>
+      </div>
+
+      <!-- 스피킷 -->
+      <div class="project-card reveal">
+        <div class="card-body">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-title">Speakit — AI 영어 회화 튜터</div>
+              <div class="card-date">2026.03 ~ 2026.06 · 1인 프로젝트</div>
+            </div>
+            <div class="card-badges">
+              <span class="cbadge cbadge-ai">AI 서비스</span>
+              <span class="cbadge cbadge-dev">Full-stack</span>
+            </div>
+          </div>
+          <div class="card-meta">Node.js · Express · OpenAI API · Vanilla JS · CSS3 · Web Speech API</div>
+          <div class="case-strip">
+            <div class="cs-cell"><div class="cs-label">문제 정의</div><div class="cs-text">기존 AI 영어 앱은 틀린 문장을 수정해주지만 왜 틀렸는지 문법적 설명이 없어 학습 효과가 낮음</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">해결 과정</div><div class="cs-text">영어교육 전공 통사구조 이론을 시스템 프롬프트에 직접 반영. Express 프록시 서버로 API 키 보안 처리</div></div>
+            <div class="cs-arrow">→</div>
+            <div class="cs-cell"><div class="cs-label">결과</div><div class="cs-text">실시간 문법 교정과 이유 설명, 복습 탭(교정 노트·어휘 플래시카드), 세션별 학습 통계까지 갖춘 완결된 학습 서비스 구현</div></div>
+          </div>
+          <p class="card-desc">전공 수업에서 학습한 통사 구조 이론을 AI 서비스에 직접 적용했습니다. 음성 인식(Web Speech API)·원어민 TTS·레벨 조절(초급·중급·고급)·주제 선택(일상·영화·여행·기술·음식·취미)을 지원하며, 복습 탭에서 교정 노트와 어휘 플래시카드를 확인할 수 있습니다.</p>
+          <div class="role-box">
+            <div class="role-title">수행 역할 (1인 프로젝트)</div>
+            <div class="role-grid">
+              <div class="role-item"><span class="rdot"></span>전공 문법 이론 기반 시스템 프롬프트 설계</div>
+              <div class="role-item"><span class="rdot"></span>Express 프록시 서버 구축 (API 키 보안)</div>
+              <div class="role-item"><span class="rdot"></span>Web Speech API 음성 인식·TTS 연동</div>
+              <div class="role-item"><span class="rdot"></span>복습 탭 및 학습 통계 대시보드 구현</div>
+            </div>
+          </div>
+        </div>
+        <div class="sk-screens">
+          <div class="sk-screen">
+            <div class="sk-mock">
+              <div class="sk-mhd"><span style="color:#818cf8;font-weight:700;font-size:13px">✦ Speakit</span><span style="color:rgba(255,255,255,.35);font-size:11px">AI 영어 회화 파트너</span></div>
+              <div style="text-align:center;padding:8px 0"><div style="font-size:15px;font-weight:700;color:#fff;line-height:1.4">영어, 이제<br/><span style="color:#818cf8">말하면서</span> 배워요</div></div>
+              <div style="text-align:center;margin-top:6px">
+                <span class="sk-chip-sm">🎤 음성 인식</span><span class="sk-chip-sm">✏️ 실시간 교정</span>
+                <span class="sk-chip-sm">🔊 원어민 음성</span><span class="sk-chip-sm">📊 학습 분석</span>
+              </div>
+            </div>
+          </div>
+          <div class="sk-screen">
+            <div class="sk-mock">
+              <div class="sk-mhd"><span style="color:#818cf8;font-weight:700;font-size:12px">🎙 스피킷</span><div><span style="font-size:10px;padding:.12rem .4rem;border-radius:3px;background:rgba(99,102,241,.2);color:#818cf8">💬 대화</span></div></div>
+              <div class="sk-bubble sk-bot">Hello! How was your day? 😊</div>
+              <div class="sk-bubble sk-user">I went to store and buyed milk.</div>
+              <div class="sk-corr"><span style="color:#f87171;text-decoration:line-through">buyed</span> → <span style="color:#34d399;font-weight:600">bought</span><div style="margin-top:2px;color:rgba(255,255,255,.35);font-size:9.5px">불규칙 동사: buy → bought</div></div>
+            </div>
+          </div>
+          <div class="sk-screen">
+            <div class="sk-mock">
+              <div class="sk-mhd"><span style="color:#818cf8;font-weight:700;font-size:12px">📊 세션 요약</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px">
+                <div class="sk-stat"><div style="font-size:17px;font-weight:700;color:#818cf8">12</div><div style="font-size:10px;color:rgba(255,255,255,.35)">대화 횟수</div></div>
+                <div class="sk-stat"><div style="font-size:17px;font-weight:700;color:#34d399">3</div><div style="font-size:10px;color:rgba(255,255,255,.35)">교정 횟수</div></div>
+              </div>
+              <div style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.7">📖 어휘 플래시카드<br/>✏️ 교정 노트 전체보기</div>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <a class="abtn abtn-github" href="https://github.com/YeonseoShin/speakit" target="_blank">⌥ GitHub</a>
+          <a class="abtn abtn-detail" href="projects/speakit/index.html" target="_blank">📋 프로젝트 상세</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-name">Yeonseo Shin</div>
+  <div class="footer-links">
+    <a href="mailto:shinalicelife@naver.com">shinalicelife@naver.com</a>
+    <a href="https://github.com/YeonseoShin" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

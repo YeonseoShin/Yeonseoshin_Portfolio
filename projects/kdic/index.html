@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>금융권역별 안정성 리포트</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <div class="header-sub">예금보험공사 공공데이터 활용 · 2025 장려상</div>
+    <div class="header-title">금융권역별 안정성 리포트</div>
+  </div>
+  <div class="header-right">
+    <select id="year-sel" onchange="render()">
+      <option value="2025">2025년 6월말</option>
+      <option value="2023">2023년말</option>
+      <option value="2020">2020년말</option>
+      <option value="2015">2015년말</option>
+    </select>
+    <a href="../../index.html" class="back">← 포트폴리오로</a>
+  </div>
+</header>
+
+<main>
+  <!-- 연도별 컨텍스트 배너 -->
+  <div class="context-banner" id="context-banner">
+    <div class="context-year" id="context-year"></div>
+    <div class="context-text" id="context-text"></div>
+    <div class="context-tags" id="context-tags"></div>
+  </div>
+
+  <!-- 요약 지표 -->
+  <div class="stats">
+    <div class="stat"><div class="s-label">분석 권역</div><div class="s-val">6</div></div>
+    <div class="stat"><div class="s-label">평균 TrustScore</div><div class="s-val" id="s-avg">—</div></div>
+    <div class="stat"><div class="s-label">최고 안정</div><div class="s-val green" id="s-top">—</div></div>
+    <div class="stat"><div class="s-label">고위험</div><div class="s-val red" id="s-low">—</div></div>
+    <div class="stat"><div class="s-label">전년 대비</div><div class="s-val" id="s-trend">—</div></div>
+  </div>
+
+  <!-- 차트 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">권역별 TrustScore</div>
+      <div class="chart-wrap"><canvas id="bar-chart" role="img" aria-label="권역별 TrustScore 막대그래프"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">회수율 vs TrustScore <span class="chart-hint">버블 크기 = 출연금 규모</span></div>
+      <div class="chart-wrap"><canvas id="bubble-chart" role="img" aria-label="회수율 vs TrustScore 버블차트"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">주요 지표 비교 <span class="chart-hint">단위: 억원</span></div>
+    <div class="chart-wrap" style="height:160px;">
+      <canvas id="stack-chart" role="img" aria-label="주요 지표 누적 막대그래프"></canvas>
+    </div>
+    <div class="legend-row">
+      <span class="leg"><span class="leg-dot" style="background:#ef4444;"></span>출연금</span>
+      <span class="leg"><span class="leg-dot" style="background:#f59e0b;"></span>보험금지급</span>
+      <span class="leg"><span class="leg-dot" style="background:#10b981;"></span>회수금</span>
+    </div>
+  </div>
+
+  <!-- 핵심 인사이트 -->
+  <div class="card">
+    <div class="card-title">핵심 분석</div>
+    <div id="insight-list" class="insight-list"></div>
+  </div>
+
+  <!-- 권역 상세 카드 -->
+  <div class="card">
+    <div class="card-title">권역별 상세 리포트</div>
+    <div id="sector-cards" class="sector-grid"></div>
+  </div>
+
+  <!-- 방법론 -->
+  <div class="method-box">
+    <div class="method-title">TrustScore 산출 방법론</div>
+    <div class="method-body">
+      예금보험공사 공공데이터(자금지원 총괄표, 지원자금 회수실적, 보험금 지급 현황)를 기반으로
+      <strong>출연금 규모(30점)</strong>, <strong>보험금지급 여부(20점)</strong>, <strong>회수율(30점)</strong>,
+      <strong>보정요소(20점)</strong>를 가중합산하여 0~100점 척도로 표준화한 지수입니다.
+      점수가 높을수록 구조조정 부담이 적고 회복력이 높은 안정적인 권역을 의미합니다.
+    </div>
+  </div>
+</main>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

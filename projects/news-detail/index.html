@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>금융 뉴스 경제 흐름 분석 대시보드</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#6366f1;--teal:#14b8a6;--text:#111827;--text2:#4b5563;--text3:#9ca3af;--border:#e5e7eb;--bg:#f9fafb;--display:'Clash Display',sans-serif;--body:'Pretendard',system-ui,sans-serif;--mono:'DM Mono',monospace}
+html{scroll-behavior:smooth}body{background:#fff;color:var(--text);font-family:var(--body);font-size:15px;line-height:1.7}
+a{text-decoration:none;color:inherit}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+
+.page-header{background:#fff;border-bottom:1px solid var(--border);padding:.9rem 5%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.back{display:flex;align-items:center;gap:.5rem;font-size:13px;color:var(--text2);transition:color .2s}.back:hover{color:var(--accent)}
+.header-title{font-size:14px;font-weight:600;color:var(--text)}
+.gh-btn{padding:.38rem 1rem;background:var(--accent);color:#fff;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s}.gh-btn:hover{background:#4f46e5}
+
+.hero{background:linear-gradient(135deg,#0a0e17,#1a1f35);padding:5rem 5% 4rem;color:#fff}
+.inner{max-width:960px;margin:0 auto}
+.proj-tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:.8rem}
+.proj-title{font-family:var(--display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.8rem}
+.proj-title span{background:linear-gradient(135deg,#818cf8,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.proj-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:600px;line-height:1.8;margin-bottom:2rem}
+.proj-meta{display:flex;gap:2rem;flex-wrap:wrap}
+.pm{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.35)}.pm strong{color:var(--teal)}
+
+.body{padding:4rem 5%}
+.sec{margin-bottom:4rem}
+.sec-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem}
+.sec-title{font-family:var(--display);font-size:1.5rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:-.01em}
+p{font-size:14.5px;color:var(--text2);line-height:1.85;margin-bottom:.9rem}
+.divider{height:1px;background:var(--border);margin:3rem 0}
+
+/* 아키텍처 다이어그램 */
+.arch{display:flex;align-items:center;gap:0;overflow-x:auto;padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:14px}
+.arch-node{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.8rem 1rem;text-align:center;min-width:110px;flex-shrink:0}
+.arch-node-icon{font-size:1.4rem;margin-bottom:.3rem}
+.arch-node-name{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:.15rem}
+.arch-node-sub{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.arch-arrow{color:var(--border);font-size:1.2rem;padding:0 .6rem;flex-shrink:0}
+.arch-node.highlight{border-color:var(--accent);background:#eef2ff}
+.arch-node.highlight .arch-node-name{color:var(--accent)}
+
+/* 기능 그리드 */
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.2rem;border-left:3px solid var(--accent)}
+.feat-card.teal{border-left-color:var(--teal)}
+.feat-card.green{border-left-color:#22c55e}
+.feat-card.amber{border-left-color:#f59e0b}
+.feat-icon{font-size:1.3rem;margin-bottom:.5rem}
+.feat-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:.35rem}
+.feat-desc{font-size:12.5px;color:var(--text2);line-height:1.7}
+
+/* 스택 테이블 */
+.stack-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.stack-table th{background:var(--bg);padding:.65rem 1rem;text-align:left;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);border-bottom:2px solid var(--border)}
+.stack-table td{padding:.65rem 1rem;border-bottom:1px solid #f3f4f6;color:var(--text2)}
+.stack-table td:first-child{font-weight:600;color:var(--text);width:140px}
+
+/* 코드 블록 */
+.code-block{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0}
+.code-topbar{background:#161b22;padding:.5rem 1rem;display:flex;justify-content:space-between;align-items:center}
+.code-filename{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4)}
+.copy-btn{font-size:11px;padding:.2rem .6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);cursor:pointer;font-family:var(--mono)}
+.copy-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+pre{padding:1.2rem;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.75;color:#c9d1d9}
+.kw{color:#ff7b72}.fn{color:#d2a8ff}.st{color:#a5d6ff}.nm{color:#79c0ff}.cm{color:#8b949e}
+
+/* 트러블슈팅 */
+.ts-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.9rem}
+.ts-problem{font-size:12px;font-weight:700;color:#dc2626;font-family:var(--mono);margin-bottom:.4rem}
+.ts-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.ts-sol{font-size:13px;color:var(--text2);line-height:1.7}
+
+.footer{background:#0a0e17;padding:2rem 5%;display:flex;justify-content:space-between;align-items:center}
+.footer-name{font-family:var(--display);font-size:14px;color:rgba(255,255,255,.3)}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.3);margin-left:1.5rem;transition:color .2s}.footer-links a:hover{color:#818cf8}
+
+@media(max-width:768px){.feat-grid{grid-template-columns:1fr}.arch{flex-direction:column}.arch-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../../index.html" class="back">← 포트폴리오</a>
+  <div class="header-title">금융 뉴스 경제 흐름 분석 대시보드</div>
+  <a href="https://github.com/YeonseoShin/financial-news-dashboard" target="_blank" class="gh-btn">⌥ GitHub</a>
+</div>
+
+<div class="hero">
+  <div class="inner">
+    <div class="proj-tag">Data Analysis · AI Model · Full-stack</div>
+    <h1 class="proj-title">금융 뉴스<br/><span>경제 흐름 분석</span> 대시보드</h1>
+    <p class="proj-sub">네이버 뉴스 API로 수집한 금융 기사를 한국어 금융 특화 AI 모델(KR-FinBert)로 분류하고, 연관 종목 주가와 리스크 등급을 함께 시각화하는 Streamlit 기반 대시보드입니다.</p>
+    <div class="proj-meta">
+      <span class="pm">기간 <strong>2025.03 ~ 06</strong></span>
+      <span class="pm">규모 <strong>1인 프로젝트</strong></span>
+      <span class="pm">스택 <strong>Python · Streamlit · HuggingFace</strong></span>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <div class="inner">
+
+    <div class="sec reveal">
+      <div class="sec-label">Background</div>
+      <div class="sec-title">프로젝트 배경</div>
+      <p>금융 뉴스는 매일 수백 건이 쏟아지지만, 각 기사가 시장에 긍정적인지 부정적인지 파악하려면 직접 읽어봐야 합니다. 범용 감성 분석 모델은 "손실", "하락" 같은 단어를 무조건 부정으로 분류하지만, 금융 맥락에서는 "손실 축소" "하락 폭 줄어"처럼 긍정적 신호일 수 있습니다.</p>
+      <p>이 문제를 해결하기 위해 서울대 자연어처리 연구실이 금융 데이터로 파인튜닝한 KR-FinBert 모델을 선택했고, 뉴스 수집부터 종목 주가 연동·리스크 등급 산출·보고서 내보내기까지 전체 파이프라인을 직접 구현했습니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Architecture</div>
+      <div class="sec-title">데이터 파이프라인</div>
+      <div class="arch">
+        <div class="arch-node">
+          <div class="arch-node-icon">📰</div>
+          <div class="arch-node-name">뉴스 수집</div>
+          <div class="arch-node-sub">네이버 API<br/>최대 50건</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-node-icon">✂️</div>
+          <div class="arch-node-name">전처리</div>
+          <div class="arch-node-sub">KoNLPy Okt<br/>형태소 분석</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node highlight">
+          <div class="arch-node-icon">🤖</div>
+          <div class="arch-node-name">감성 분류</div>
+          <div class="arch-node-sub">KR-FinBert<br/>긍정/중립/부정</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-node-icon">📈</div>
+          <div class="arch-node-name">주가 연동</div>
+          <div class="arch-node-sub">yfinance<br/>30일 차트</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-node-icon">⚠️</div>
+          <div class="arch-node-name">리스크 등급</div>
+          <div class="arch-node-sub">안정/주의<br/>고위험 3단계</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-node-icon">📊</div>
+          <div class="arch-node-name">시각화</div>
+          <div class="arch-node-sub">Streamlit<br/>Plotly</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Features</div>
+      <div class="sec-title">주요 기능</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🤖</div>
+          <div class="feat-title">KR-FinBert 금융 특화 감성 분류</div>
+          <div class="feat-desc">범용 모델 대신 snunlp/KR-FinBert-SC 사용. 금융 도메인 맥락을 반영해 "손실 축소" 같은 표현도 정확히 분류. OpenAI GPT 모드도 선택 가능.</div>
+        </div>
+        <div class="feat-card teal">
+          <div class="feat-icon">📈</div>
+          <div class="feat-title">연관 종목 주가 자동 연동</div>
+          <div class="feat-desc">기사 본문에서 종목명을 추출해 yfinance로 30일 주가 차트를 자동 표시. 뉴스 감성 변화와 주가 흐름을 함께 비교 분석 가능.</div>
+        </div>
+        <div class="feat-card green">
+          <div class="feat-icon">⚠️</div>
+          <div class="feat-title">리스크 키워드 감지 및 등급 산출</div>
+          <div class="feat-desc">파산·부실·유동성 위기 등 리스크 키워드를 감지해 기사별 안정·주의·고위험 3단계 등급을 산출. 위험 집중 구간을 한눈에 파악 가능.</div>
+        </div>
+        <div class="feat-card amber">
+          <div class="feat-icon">🗺️</div>
+          <div class="feat-title">형태소 분석 기반 키워드 시각화</div>
+          <div class="feat-desc">KoNLPy Okt로 명사 추출 후 워드클라우드와 키워드 빈도 차트 생성. AI 요약(GPT-4o-mini)으로 시장 분위기 종합 텍스트도 자동 생성.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Tech Stack</div>
+      <div class="sec-title">기술 스택</div>
+      <table class="stack-table">
+        <thead><tr><th>분류</th><th>기술</th><th>선택 이유</th></tr></thead>
+        <tbody>
+          <tr><td>AI 모델</td><td>snunlp/KR-FinBert-SC</td><td>한국어 금융 뉴스 특화 파인튜닝 모델. 범용 모델 대비 금융 맥락 정확도 높음</td></tr>
+          <tr><td>형태소 분석</td><td>KoNLPy (Okt)</td><td>한국어 명사 추출 및 키워드 분석에 최적화</td></tr>
+          <tr><td>뉴스 수집</td><td>네이버 뉴스 검색 API</td><td>국내 금융 뉴스 커버리지 높음, 키워드 기반 최신순 수집</td></tr>
+          <tr><td>주가 데이터</td><td>yfinance</td><td>무료 실시간 주가 조회, 히스토리 데이터 제공</td></tr>
+          <tr><td>시각화</td><td>Plotly, Streamlit</td><td>인터랙티브 차트와 빠른 웹앱 배포</td></tr>
+          <tr><td>내보내기</td><td>ReportLab, pandas</td><td>PDF 보고서 생성, CSV/JSON 데이터 내보내기</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Core Code</div>
+      <div class="sec-title">핵심 코드</div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">src/analyzer.py</span>
+          <button class="copy-btn" onclick="this.textContent='복사됨';navigator.clipboard.writeText(this.closest('.code-block').querySelector('pre').textContent)">복사</button>
+        </div>
+        <pre><span class="kw">def</span> <span class="fn">analyze_sentiment</span>(text: <span class="kw">str</span>, model: <span class="kw">str</span> = <span class="st">"huggingface"</span>) -> <span class="kw">dict</span>:
+    <span class="st">"""
+    단일 텍스트의 시장 심리를 분류합니다.
+    KR-FinBert: 한국어 금융 뉴스 특화 사전학습 모델
+    범용 모델 대비 금융 맥락 정확도 향상
+    """</span>
+    <span class="kw">if not</span> text <span class="kw">or not</span> text.strip():
+        <span class="kw">return</span> {<span class="st">"label"</span>: <span class="st">"중립"</span>, <span class="st">"score"</span>: <span class="nm">0.5</span>}
+
+    <span class="kw">if</span> model == <span class="st">"openai"</span>:
+        <span class="kw">return</span> <span class="fn">_analyze_with_openai</span>(text)
+
+    <span class="cm"># HuggingFace KR-FinBert 기본 사용</span>
+    <span class="kw">return</span> <span class="fn">_analyze_with_huggingface</span>(text)</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">src/processor.py — 리스크 등급 산출</span>
+          <button class="copy-btn" onclick="this.textContent='복사됨';navigator.clipboard.writeText(this.closest('.code-block').querySelector('pre').textContent)">복사</button>
+        </div>
+        <pre><span class="nm">RISK_KEYWORDS</span> = {
+    <span class="st">"고위험"</span>: [<span class="st">"파산"</span>, <span class="st">"부실"</span>, <span class="st">"유동성 위기"</span>, <span class="st">"상장폐지"</span>, <span class="st">"영업정지"</span>],
+    <span class="st">"주의"</span>:   [<span class="st">"손실"</span>, <span class="st">"하락"</span>, <span class="st">"적자"</span>, <span class="st">"위험"</span>, <span class="st">"불확실"</span>],
+}
+
+<span class="kw">def</span> <span class="fn">classify_risk</span>(text: <span class="kw">str</span>) -> <span class="kw">str</span>:
+    <span class="kw">for</span> level, keywords <span class="kw">in</span> RISK_KEYWORDS.items():
+        <span class="kw">if</span> <span class="fn">any</span>(kw <span class="kw">in</span> text <span class="kw">for</span> kw <span class="kw">in</span> keywords):
+            <span class="kw">return</span> level
+    <span class="kw">return</span> <span class="st">"안정"</span></pre>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Trouble Shooting</div>
+      <div class="sec-title">문제 해결 과정</div>
+      <div class="ts-item">
+        <div class="ts-problem">PROBLEM 01</div>
+        <div class="ts-title">KoNLPy 설치 시 Java 의존성 오류</div>
+        <div class="ts-sol">KoNLPy는 내부적으로 Java(JVM)를 사용하기 때문에 JDK가 없는 환경에서 ImportError가 발생했습니다. requirements.txt에 KoNLPy만 명시해두면 환경에 따라 실행이 안 되는 문제가 있어, .env.example에 JAVA_HOME 설정 안내를 추가하고 Docker 환경 가이드를 README에 포함해 해결했습니다.</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">PROBLEM 02</div>
+        <div class="ts-title">yfinance 한국 종목 티커 매핑</div>
+        <div class="ts-sol">yfinance는 한국 주식에 ".KS"(코스피), ".KQ"(코스닥) 접미사가 필요한데, 기사에서 추출한 종목명은 한글이어서 자동 매핑이 불가능했습니다. 주요 종목 100개의 한글명→티커 딕셔너리를 직접 구축하고, 매핑되지 않는 종목은 "데이터 없음"으로 처리해 오류 없이 실행되도록 했습니다.</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">PROBLEM 03</div>
+        <div class="ts-title">Streamlit 배포 시 모델 로딩 지연</div>
+        <div class="ts-sol">KR-FinBert 모델이 매 요청마다 로드되어 첫 실행 시 30초 이상 소요됐습니다. @st.cache_resource 데코레이터로 모델을 앱 전체에서 한 번만 로드하도록 수정해 이후 요청은 즉시 처리되도록 개선했습니다.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-name">Yeonseo Shin</div>
+  <div class="footer-links">
+    <a href="../../index.html">포트폴리오</a>
+    <a href="https://github.com/YeonseoShin/financial-news-dashboard" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

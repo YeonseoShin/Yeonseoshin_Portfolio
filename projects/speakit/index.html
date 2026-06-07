@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Speakit — AI 영어 회화 튜터</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#6366f1;--teal:#14b8a6;--text:#111827;--text2:#4b5563;--text3:#9ca3af;--border:#e5e7eb;--bg:#f9fafb;--display:'Clash Display',sans-serif;--body:'Pretendard',system-ui,sans-serif;--mono:'DM Mono',monospace}
+html{scroll-behavior:smooth}body{background:#fff;color:var(--text);font-family:var(--body);font-size:15px;line-height:1.7}
+a{text-decoration:none;color:inherit}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+.page-header{background:#fff;border-bottom:1px solid var(--border);padding:.9rem 5%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.back{display:flex;align-items:center;gap:.5rem;font-size:13px;color:var(--text2);transition:color .2s}.back:hover{color:var(--accent)}
+.header-title{font-size:14px;font-weight:600;color:var(--text)}
+.gh-btn{padding:.38rem 1rem;background:var(--accent);color:#fff;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s}.gh-btn:hover{background:#4f46e5}
+.hero{background:linear-gradient(135deg,#0d1117,#1a1f2e);padding:5rem 5% 4rem;color:#fff}
+.inner{max-width:960px;margin:0 auto}
+.proj-tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:.8rem}
+.proj-title{font-family:var(--display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.8rem}
+.proj-title span{color:#818cf8}
+.proj-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:600px;line-height:1.8;margin-bottom:2rem}
+.proj-meta{display:flex;gap:2rem;flex-wrap:wrap}
+.pm{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.35)}.pm strong{color:var(--teal)}
+.body{padding:4rem 5%}
+.sec{margin-bottom:4rem}
+.sec-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem}
+.sec-title{font-family:var(--display);font-size:1.5rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:-.01em}
+p{font-size:14.5px;color:var(--text2);line-height:1.85;margin-bottom:.9rem}
+.divider{height:1px;background:var(--border);margin:3rem 0}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.2rem;border-left:3px solid var(--accent)}
+.feat-card.green{border-left-color:#22c55e}.feat-card.teal{border-left-color:var(--teal)}.feat-card.amber{border-left-color:#f59e0b}
+.feat-icon{font-size:1.3rem;margin-bottom:.5rem}
+.feat-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:.35rem}
+.feat-desc{font-size:12.5px;color:var(--text2);line-height:1.7}
+.stack-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.stack-table th{background:var(--bg);padding:.65rem 1rem;text-align:left;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);border-bottom:2px solid var(--border)}
+.stack-table td{padding:.65rem 1rem;border-bottom:1px solid #f3f4f6;color:var(--text2)}
+.stack-table td:first-child{font-weight:600;color:var(--text);width:160px}
+.code-block{background:#0d1117;border-radius:12px;overflow:hidden;margin:1rem 0}
+.code-topbar{background:#161b22;padding:.5rem 1rem;display:flex;justify-content:space-between;align-items:center}
+.code-filename{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4)}
+.copy-btn{font-size:11px;padding:.2rem .6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);cursor:pointer;font-family:var(--mono)}
+pre{padding:1.2rem;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.75;color:#c9d1d9}
+.kw{color:#ff7b72}.fn{color:#d2a8ff}.st{color:#a5d6ff}.nm{color:#79c0ff}.cm{color:#8b949e}
+/* 서버 아키텍처 */
+.arch-row{display:flex;align-items:center;gap:0;overflow-x:auto;padding:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:14px}
+.arch-node{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.8rem 1rem;text-align:center;min-width:120px;flex-shrink:0}
+.arch-node-icon{font-size:1.4rem;margin-bottom:.3rem}
+.arch-node-name{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:.15rem}
+.arch-node-sub{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.arch-arrow{color:var(--border);font-size:1.2rem;padding:0 .6rem;flex-shrink:0}
+.arch-node.hl{border-color:var(--accent);background:#eef2ff}.arch-node.hl .arch-node-name{color:var(--accent)}
+.ts-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.9rem}
+.ts-problem{font-size:12px;font-weight:700;color:#dc2626;font-family:var(--mono);margin-bottom:.4rem}
+.ts-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.ts-sol{font-size:13px;color:var(--text2);line-height:1.7}
+/* 목업 */
+.mockup-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.mockup-card{background:#0d1117;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.mk-head{background:#161b22;padding:.65rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.mk-body{padding:.8rem}
+.mk-msg{font-size:11px;padding:.38rem .6rem;border-radius:7px;margin-bottom:.3rem;line-height:1.4}
+.mk-bot{background:rgba(255,255,255,.06);color:rgba(255,255,255,.7)}
+.mk-user{background:rgba(99,102,241,.18);color:#a5b4fc;text-align:right}
+.mk-corr{background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.18);border-radius:5px;padding:.3rem .5rem;font-size:10px;color:rgba(255,255,255,.55)}
+.mk-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.5rem;text-align:center}
+.chip-sm{font-size:9.5px;padding:.15rem .45rem;border-radius:4px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);display:inline-block;margin:2px}
+
+.footer{background:#0a0e17;padding:2rem 5%;display:flex;justify-content:space-between;align-items:center}
+.footer-name{font-family:var(--display);font-size:14px;color:rgba(255,255,255,.3)}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.3);margin-left:1.5rem;transition:color .2s}.footer-links a:hover{color:#818cf8}
+@media(max-width:768px){.feat-grid,.mockup-wrap{grid-template-columns:1fr}.arch-row{flex-direction:column}.arch-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../../index.html" class="back">← 포트폴리오</a>
+  <div class="header-title">Speakit — AI 영어 회화 튜터</div>
+  <a href="https://github.com/YeonseoShin/speakit" target="_blank" class="gh-btn">⌥ GitHub</a>
+</div>
+
+<div class="hero">
+  <div class="inner">
+    <div class="proj-tag">AI Service · Full-stack · Node.js</div>
+    <h1 class="proj-title">Speakit<br/><span>AI 영어 회화 튜터</span></h1>
+    <p class="proj-sub">영어교육 전공 수업에서 학습한 통사 구조 이론을 AI 서비스로 구현했습니다. 실시간 문법 교정과 교정 이유 설명, 복습 탭까지 갖춘 완결된 영어 학습 서비스입니다.</p>
+    <div class="proj-meta">
+      <span class="pm">기간 <strong>2026.03 ~ 06</strong></span>
+      <span class="pm">규모 <strong>1인 프로젝트</strong></span>
+      <span class="pm">스택 <strong>Node.js · Express · OpenAI API</strong></span>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <div class="inner">
+
+    <div class="sec reveal">
+      <div class="sec-label">Background</div>
+      <div class="sec-title">프로젝트 배경</div>
+      <p>기존 AI 영어 앱 대부분은 틀린 문장을 수정해주지만 "왜 틀렸는지"는 설명하지 않습니다. 영어교육 전공에서 배운 통사 구조(Syntactic Structure) 이론상, 문법 오류는 범주별로 구분(불규칙 동사, 시제 오류, 관사 누락 등)해 교정하는 것이 학습 효과를 높입니다.</p>
+      <p>이 아이디어를 직접 구현하고자 OpenAI API를 연동했습니다. 단순 문장 교정이 아닌 오류 범주를 명시하고 문법 설명을 함께 제공하도록 시스템 프롬프트를 설계했습니다. API 키 보안을 위해 클라이언트 직접 호출이 아닌 Express 프록시 서버 구조를 채택했습니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Architecture</div>
+      <div class="sec-title">서버 아키텍처</div>
+      <div class="arch-row">
+        <div class="arch-node">
+          <div class="arch-node-icon">🌐</div>
+          <div class="arch-node-name">브라우저</div>
+          <div class="arch-node-sub">Vanilla JS<br/>Web Speech API</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node hl">
+          <div class="arch-node-icon">🛡️</div>
+          <div class="arch-node-name">Express 서버</div>
+          <div class="arch-node-sub">API 키 보안<br/>POST /api/chat</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="arch-node-icon">🤖</div>
+          <div class="arch-node-name">OpenAI API</div>
+          <div class="arch-node-sub">GPT-4o<br/>문법 교정·TTS</div>
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:13px;color:var(--text3)">API 키를 클라이언트에서 직접 호출하면 브라우저 개발자 도구로 키가 노출됩니다. Express 프록시 서버를 중간에 두어 환경변수로만 관리합니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Features</div>
+      <div class="sec-title">주요 기능</div>
+      <div class="mockup-wrap">
+        <div class="mockup-card">
+          <div class="mk-head"><span style="color:#818cf8;font-weight:700;font-size:12px">✦ Speakit</span><span style="font-size:10px;padding:.12rem .4rem;border-radius:3px;background:rgba(99,102,241,.2);color:#818cf8">💬 대화</span></div>
+          <div class="mk-body">
+            <div class="mk-msg mk-bot">Hello! How was your day? 😊</div>
+            <div class="mk-msg mk-user">I went to store and buyed milk.</div>
+            <div class="mk-corr"><span style="color:#f87171;text-decoration:line-through">buyed</span> → <span style="color:#34d399;font-weight:600">bought</span><div style="margin-top:2px;color:rgba(255,255,255,.35);font-size:9.5px">불규칙 동사: buy → bought</div></div>
+          </div>
+        </div>
+        <div class="mockup-card">
+          <div class="mk-head"><span style="color:#818cf8;font-weight:700;font-size:12px">📖 복습 탭</span></div>
+          <div class="mk-body">
+            <div style="font-size:10px;color:rgba(255,255,255,.35);font-family:var(--mono);margin-bottom:.4rem">✏️ 교정 노트</div>
+            <div class="mk-corr" style="margin-bottom:.4rem">buyed → bought (불규칙 동사)</div>
+            <div class="mk-corr">I seen → I saw (불규칙 동사)</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.35);font-family:var(--mono);margin:.5rem 0 .3rem">💡 어휘 플래시카드</div>
+            <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;font-size:11px;color:rgba(255,255,255,.6)">ephemeral · 일시적인</div>
+          </div>
+        </div>
+        <div class="mockup-card">
+          <div class="mk-head"><span style="color:#818cf8;font-weight:700;font-size:12px">📊 학습 통계</span></div>
+          <div class="mk-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:.5rem">
+              <div class="mk-stat"><div style="font-size:16px;font-weight:700;color:#818cf8">24</div><div style="font-size:9.5px;color:rgba(255,255,255,.35)">발화 단어</div></div>
+              <div class="mk-stat"><div style="font-size:16px;font-weight:700;color:#34d399">2</div><div style="font-size:9.5px;color:rgba(255,255,255,.35)">교정 횟수</div></div>
+            </div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="chip-sm">일상생활</span><span class="chip-sm" style="background:rgba(99,102,241,.15);color:#818cf8">중급</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-grid" style="margin-top:1rem">
+        <div class="feat-card">
+          <div class="feat-icon">✏️</div>
+          <div class="feat-title">통사구조 기반 문법 교정</div>
+          <div class="feat-desc">불규칙 동사, 시제 오류, 관사 누락, 수 일치 오류 등 문법 범주를 명시해 교정 이유를 함께 설명합니다. 영어교육 전공 이론을 시스템 프롬프트에 직접 반영했습니다.</div>
+        </div>
+        <div class="feat-card green">
+          <div class="feat-icon">🎤</div>
+          <div class="feat-title">음성 인식 및 원어민 TTS</div>
+          <div class="feat-desc">Web Speech API로 음성 입력을 텍스트로 변환하고, OpenAI TTS로 원어민 발음 음성을 출력합니다. Chrome/Edge 브라우저에서 최적 동작합니다.</div>
+        </div>
+        <div class="feat-card teal">
+          <div class="feat-icon">🎯</div>
+          <div class="feat-title">레벨·주제 맞춤 대화</div>
+          <div class="feat-desc">초급·중급·고급 레벨에 따라 AI가 어휘·문장 복잡도를 자동 조절합니다. 일상·영화·여행·기술·음식·취미 6개 주제 선택 가능합니다.</div>
+        </div>
+        <div class="feat-card amber">
+          <div class="feat-icon">📖</div>
+          <div class="feat-title">복습 탭 및 학습 통계</div>
+          <div class="feat-desc">대화 중 교정된 문법 내용이 교정 노트에 자동 저장됩니다. 새로운 단어는 어휘 플래시카드로 쌓이고, 세션별 발화 횟수·교정 횟수·유창성 점수를 확인할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Tech Stack</div>
+      <div class="sec-title">기술 스택</div>
+      <table class="stack-table">
+        <thead><tr><th>분류</th><th>기술</th><th>선택 이유</th></tr></thead>
+        <tbody>
+          <tr><td>백엔드</td><td>Node.js · Express</td><td>경량 서버로 API 프록시 역할. API 키를 환경변수로만 관리해 클라이언트 노출 방지</td></tr>
+          <tr><td>AI</td><td>OpenAI GPT-4o</td><td>고품질 문법 교정과 자연스러운 대화 생성. TTS API로 원어민 음성 출력</td></tr>
+          <tr><td>음성 인식</td><td>Web Speech API</td><td>외부 라이브러리 없이 브라우저 내장 API 활용. 실시간 STT 처리</td></tr>
+          <tr><td>프론트엔드</td><td>Vanilla JS · CSS3</td><td>프레임워크 없이 DOM 직접 제어. 다크모드·탭 전환 모두 순수 JS로 구현</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Core Code</div>
+      <div class="sec-title">핵심 코드</div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <span class="code-filename">server.js — Express 프록시 서버</span>
+          <button class="copy-btn" onclick="this.textContent='복사됨'">복사</button>
+        </div>
+        <pre><span class="cm">// API 키를 서버 환경변수에서만 관리</span>
+app.<span class="fn">post</span>(<span class="st">'/api/chat'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> { messages, level, topic } = req.body;
+
+  <span class="kw">const</span> systemPrompt = <span class="fn">buildSystemPrompt</span>(level, topic);
+  <span class="cm">// 통사구조 기반 문법 교정 지시 포함</span>
+
+  <span class="kw">const</span> response = <span class="kw">await</span> openai.chat.completions.<span class="fn">create</span>({
+    model: <span class="st">'gpt-4o'</span>,
+    messages: [
+      { role: <span class="st">'system'</span>, content: systemPrompt },
+      ...messages
+    ]
+  });
+  res.<span class="fn">json</span>(response.choices[<span class="nm">0</span>].message);
+});</pre>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec reveal">
+      <div class="sec-label">Trouble Shooting</div>
+      <div class="sec-title">문제 해결 과정</div>
+      <div class="ts-item">
+        <div class="ts-problem">PROBLEM 01</div>
+        <div class="ts-title">Web Speech API CORS 및 브라우저 호환성</div>
+        <div class="ts-sol">Web Speech API는 Safari에서 지원되지 않고, localhost에서 크롬도 마이크 권한이 HTTPS 없이는 제한됩니다. 개발 환경에서는 localhost 예외로 처리하고, 배포 시에는 HTTPS 필수임을 README에 명시했습니다. Safari 사용자를 위해 텍스트 입력 모드를 기본으로 유지했습니다.</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">PROBLEM 02</div>
+        <div class="ts-title">교정 파싱: AI 응답에서 교정 내용 추출</div>
+        <div class="ts-sol">GPT 응답이 자유 형식 텍스트로 오기 때문에 교정 내용을 구조화하기 어려웠습니다. 시스템 프롬프트에 JSON 구조로 응답하도록 명시하고(corrections 배열 포함), 응답을 파싱해 교정 노트에 자동 저장하는 방식으로 해결했습니다.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-name">Yeonseo Shin</div>
+  <div class="footer-links">
+    <a href="../../index.html">포트폴리오</a>
+    <a href="https://github.com/YeonseoShin/speakit" target="_blank">GitHub</a>
+  </div>
+</footer>
+<script>
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

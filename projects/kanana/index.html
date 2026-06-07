@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>카나나 역기획 리포트</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#6366f1;--teal:#14b8a6;--text:#111827;--text2:#4b5563;--text3:#9ca3af;--border:#e5e7eb;--bg:#f9fafb;--display:'Clash Display',sans-serif;--body:'Pretendard',system-ui,sans-serif;--mono:'DM Mono',monospace}
+html{scroll-behavior:smooth}body{background:#fff;color:var(--text);font-family:var(--body);font-size:15px;line-height:1.7}
+a{text-decoration:none;color:inherit}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+.page-header{background:#fff;border-bottom:1px solid var(--border);padding:.9rem 5%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.back{display:flex;align-items:center;gap:.5rem;font-size:13px;color:var(--text2);transition:color .2s}.back:hover{color:var(--accent)}
+.header-title{font-size:14px;font-weight:600;color:var(--text)}
+.proto-btn{padding:.38rem 1rem;background:var(--accent);color:#fff;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s}.proto-btn:hover{background:#4f46e5}
+.hero{background:linear-gradient(135deg,#0a0e17,#1a1432);padding:5rem 5% 4rem;color:#fff}
+.inner{max-width:1000px;margin:0 auto}
+.proj-tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:.8rem}
+.proj-title{font-family:var(--display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.8rem}
+.proj-title span{background:linear-gradient(135deg,#818cf8,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.proj-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:640px;line-height:1.8;margin-bottom:2rem}
+.proj-meta{display:flex;gap:2rem;flex-wrap:wrap}
+.pm{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.35)}.pm strong{color:var(--teal)}
+.body{padding:4rem 5%}
+.sec{margin-bottom:4rem}
+.sec-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem}
+.sec-title{font-family:var(--display);font-size:1.5rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:-.01em}
+p{font-size:14.5px;color:var(--text2);line-height:1.85;margin-bottom:.9rem}
+.divider{height:1px;background:var(--border);margin:3rem 0}
+
+/* 점수 카드 */
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.score-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.2rem;text-align:center}
+.sc-name{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:.5rem}
+.sc-val{font-family:var(--display);font-size:2rem;font-weight:700;margin-bottom:.2rem}
+.sc-sub{font-size:10px;color:var(--text3)}
+
+/* 비교표 */
+.cmp-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.cmp-table th{background:var(--bg);padding:.65rem 1rem;text-align:left;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);border-bottom:2px solid var(--border)}
+.cmp-table td{padding:.65rem 1rem;border-bottom:1px solid #f3f4f6;vertical-align:top}
+.cmp-table td:first-child{font-weight:600;color:var(--text);width:160px;white-space:nowrap}
+.win-k{background:rgba(99,102,241,.04);color:var(--accent)}
+.win-g{background:rgba(20,184,166,.04);color:#065f52}
+
+/* 인사이트 */
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.insight-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.3rem;border-left:3px solid var(--accent)}
+.insight-card.t{border-left-color:var(--teal)}.insight-card.r{border-left-color:#f472b6}.insight-card.g{border-left-color:#22c55e}
+.insight-num{font-family:var(--display);font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:.3rem}
+.insight-card.t .insight-num{color:var(--teal)}.insight-card.r .insight-num{color:#f472b6}.insight-card.g .insight-num{color:#22c55e}
+.insight-title{font-size:13.5px;font-weight:700;margin-bottom:.4rem}
+.insight-body{font-size:12.5px;color:var(--text2);line-height:1.7}
+
+/* Pain→TO-BE */
+.ptb{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:start}
+.ptb-list{display:flex;flex-direction:column;gap:.5rem}
+.ptb-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.ptb-item.pain{border-left:3px solid #ef4444}
+.ptb-item.tobe{border-left:3px solid var(--teal)}
+.ptb-id{font-family:var(--mono);font-size:10px;font-weight:700;margin-bottom:.2rem}
+.ptb-id.p{color:#ef4444}.ptb-id.t{color:var(--teal)}
+.ptb-text{font-size:13px;color:var(--text2)}
+.ptb-arrow{display:flex;align-items:center;justify-content:center;padding-top:2.5rem;font-size:1.5rem;color:var(--border)}
+
+/* 모델 타임라인 */
+.model-tl{display:flex;gap:0;overflow-x:auto;padding:.5rem 0}
+.model-node{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.85rem 1rem;text-align:center;min-width:120px;flex-shrink:0}
+.model-node.hl{border-color:var(--accent);background:#eef2ff}
+.model-node.tl{border-color:var(--teal);background:#f0fdfa}
+.model-arrow{color:var(--border);font-size:1.1rem;padding:0 .5rem;display:flex;align-items:center;flex-shrink:0}
+.mn-ver{font-family:var(--display);font-size:12px;font-weight:700;color:var(--text);margin-bottom:.15rem}
+.mn-date{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:.2rem}
+.mn-feat{font-size:10.5px;color:var(--text2);line-height:1.4}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(20,184,166,.04));border:1px solid rgba(99,102,241,.15);border-radius:16px;padding:2.5rem;text-align:center;margin-top:2rem}
+.cta-title{font-family:var(--display);font-size:1.4rem;font-weight:700;margin-bottom:.6rem}
+.cta-desc{font-size:14px;color:var(--text2);margin-bottom:1.5rem}
+.cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.cta-btn{padding:.7rem 1.6rem;border-radius:10px;font-size:13.5px;font-weight:600;transition:all .2s}
+.cta-primary{background:var(--accent);color:#fff}.cta-primary:hover{background:#4f46e5;transform:translateY(-1px)}
+.cta-ghost{border:1px solid var(--border);color:var(--text2)}.cta-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+.footer{background:#0a0e17;padding:2rem 5%;display:flex;justify-content:space-between;align-items:center}
+.footer-name{font-family:var(--display);font-size:14px;color:rgba(255,255,255,.3)}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.3);margin-left:1.5rem;transition:color .2s}.footer-links a:hover{color:#818cf8}
+@media(max-width:768px){.score-grid{grid-template-columns:repeat(2,1fr)}.insight-grid{grid-template-columns:1fr}.ptb{grid-template-columns:1fr}.ptb-arrow{display:none}.model-tl{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../../index.html" class="back">← 포트폴리오</a>
+  <div class="header-title">카카오 카나나 역기획 리포트</div>
+  <a href="../../kanana-prototype.html" class="proto-btn">프로토타입 체험 →</a>
+</div>
+
+<div class="hero">
+  <div class="inner">
+    <div class="proj-tag">IT 기획 · 역기획 · AI 분석 · Phase 1~5</div>
+    <h1 class="proj-title">카카오 <span>카나나</span> AI 메이트<br/>역기획 분석</h1>
+    <p class="proj-sub">카카오 카나나 서비스를 역기획 방법론으로 분석하고 ChatGPT와 직접 비교 테스트했습니다. HuggingFace 오픈소스 모델 아키텍처까지 분석해 6개 TO-BE 기능을 정의하고 프로토타입으로 구현했습니다.</p>
+    <div class="proj-meta">
+      <span class="pm">기간 <strong>2026.01 ~ 02</strong></span>
+      <span class="pm">규모 <strong>1인 기획 프로젝트</strong></span>
+      <span class="pm">산출물 <strong>Phase 1~5</strong></span>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <div class="inner">
+
+    <!-- 종합 점수 -->
+    <div class="sec reveal">
+      <div class="sec-label">Overall Score</div>
+      <div class="sec-title">4개 서비스 종합 점수 비교 (5점 만점, 8개 평가 축 평균)</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.2rem;margin-bottom:1.2rem;font-size:13px;color:var(--text2);line-height:1.8">
+        <strong style="color:var(--text);display:block;margin-bottom:.4rem">📐 평가 기준 (직접 테스트, 1~5점)</strong>
+        8개 평가 축(초개인화·에이전틱 실행·한국어 적합성·생태계 연동·전문성·안전 가이드라인·응답 깊이·맥락 유지)에 대해 동일 프롬프트를 각 서비스에 직접 입력한 후 응답 품질을 1~5점으로 평가했습니다. Meta AI·Character.ai는 카나나·ChatGPT 대비 비교 테스트 횟수가 적어 참고 수준입니다.
+      </div>
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="sc-name">카나나</div>
+          <div class="sc-val" style="color:var(--accent)">4.0</div>
+          <div class="sc-sub">초개인화·생태계 연동 강점</div>
+        </div>
+        <div class="score-card">
+          <div class="sc-name">ChatGPT (GPT-4o)</div>
+          <div class="sc-val" style="color:var(--teal)">4.3</div>
+          <div class="sc-sub">전문성·안전 가이드라인 강점</div>
+        </div>
+        <div class="score-card">
+          <div class="sc-name">Meta AI</div>
+          <div class="sc-val" style="color:var(--text3)">3.3</div>
+          <div class="sc-sub">소셜 플랫폼 통합</div>
+        </div>
+        <div class="score-card">
+          <div class="sc-name">Character.ai</div>
+          <div class="sc-val" style="color:var(--text3)">2.4</div>
+          <div class="sc-sub">감성·엔터테인먼트 특화</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:1.5rem">
+        <canvas id="radarChart" style="max-height:300px"></canvas>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 실사용 테스트 -->
+    <div class="sec reveal">
+      <div class="sec-label">실사용 테스트</div>
+      <div class="sec-title">동일 프롬프트 8개 시나리오 비교</div>
+      <p>mate.kanana.ai와 ChatGPT GPT-4o에 동일한 프롬프트를 직접 입력하고 응답을 비교했습니다.</p>
+      <table class="cmp-table">
+        <thead><tr><th>시나리오</th><th>카나나</th><th>ChatGPT</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>위치·시간 자동 인식</td>
+            <td class="win-k">✅ 동 단위 위치, 시각 자동 인식 후 응답에 반영</td>
+            <td>❌ 위치 정보 없음. 직접 입력 필요</td>
+          </tr>
+          <tr>
+            <td>리마인더 등록</td>
+            <td class="win-k">✅ "6월 7일 오전 9시 알림 등록됨" 실제 기기 알림 실행</td>
+            <td>△ Scheduled Tasks 기능으로 예약 메시지 전송 가능하나 기기 알림 직접 실행 불가</td>
+          </tr>
+          <tr>
+            <td>RAG 개념 설명</td>
+            <td>△ 친근한 톤, 2단계 요약</td>
+            <td class="win-g">✅ 벡터 DB 종류, Embedding 파이프라인, 비용 비교까지 설명. 이전 대화 관심사 연결</td>
+          </tr>
+          <tr>
+            <td>PPT 기획 목차</td>
+            <td>△ 9섹션 기본 구조, 즉시 활용 가능 수준</td>
+            <td class="win-g">✅ KPI 수치 예시, Before/After 표, 발표 시간별 압축안까지 제시</td>
+          </tr>
+          <tr>
+            <td>의료 전문 질문 (메트포르민)</td>
+            <td>eGFR 수치 기준 정확히 제시, 조영제 주의사항 포함</td>
+            <td class="win-g">✅ ADA/KDIGO 논문 출처 명시 + 논문 링크 제공</td>
+          </tr>
+          <tr>
+            <td>감성 대화</td>
+            <td>공감 후 역질문. 위기 여부 직접 확인 없음</td>
+            <td>공감 후 힘든 이유 5가지 유형화. 자해 가능성 직접 확인</td>
+          </tr>
+          <tr>
+            <td>카카오 생태계 지식</td>
+            <td class="win-k">✅ 카카오뱅크 mini 한도 등 내부 수치 정확히 파악</td>
+            <td>△ 일반적인 절차 안내만. 내부 수치 없음</td>
+          </tr>
+          <tr>
+            <td>500kcal 다이어트 질문</td>
+            <td>위험 경고 + 일반적 대안 제시</td>
+            <td>Memory 기능 활성화 시 이전 대화에서 파악한 운동 습관을 연결해 더 구체적인 경고 제시</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 모델 아키텍처 -->
+    <div class="sec reveal">
+      <div class="sec-label">Model Architecture</div>
+      <div class="sec-title">Kanana 오픈소스 모델 분석 (HuggingFace)</div>
+      <p>카나나는 단순 API 래퍼가 아닌 카카오가 자체 개발한 LLM 기반 서비스입니다. HuggingFace에 공개된 오픈소스 모델을 직접 분석했습니다.</p>
+      <div class="model-tl">
+        <div class="model-node">
+          <div class="mn-ver">Nano 2.1B</div>
+          <div class="mn-date">2025.05</div>
+          <div class="mn-feat">경량 모델<br/>온디바이스 가능</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node">
+          <div class="mn-ver">Kanana 8B</div>
+          <div class="mn-date">2025.05</div>
+          <div class="mn-feat">기본 모델<br/>자체 LLM</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node hl">
+          <div class="mn-ver">Kanana-1.5</div>
+          <div class="mn-date">2025.07</div>
+          <div class="mn-feat">MoE 15.7B<br/>128K 컨텍스트</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node hl">
+          <div class="mn-ver">Kanana-2</div>
+          <div class="mn-date">2025.12</div>
+          <div class="mn-feat">30B-A3B<br/>에이전틱 AI 특화</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node tl">
+          <div class="mn-ver">Safeguard</div>
+          <div class="mn-date">2025.12</div>
+          <div class="mn-feat">안전 특화<br/>유해 콘텐츠 필터</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;margin-top:1rem;font-size:13.5px;color:var(--text2);line-height:1.75">
+        <strong style="color:var(--text)">MoE (Mixture of Experts) 아키텍처 의의</strong> — Kanana-2는 전체 30B 파라미터 중 3B만 활성화해 A100 범용 GPU에서 구동 가능한 실용성을 확보했습니다. DeepSeek_v3 구조를 채택한 이 선택은 B2B 고객의 자체 서버 배포를 고려한 전략으로 해석됩니다. HuggingFace 조건부 공개(상업 라이선스)는 완전 폐쇄(OpenAI)와 완전 개방(Meta) 사이의 현실적 경로로, 기술력 검증과 B2B 생태계 확장을 동시에 추구합니다.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 핵심 인사이트 -->
+    <div class="sec reveal">
+      <div class="sec-label">Key Insights</div>
+      <div class="sec-title">핵심 인사이트</div>
+      <div class="insight-grid">
+        <div class="insight-card">
+          <div class="insight-num">01</div>
+          <div class="insight-title">에이전틱 실행 능력이 핵심 차별점</div>
+          <div class="insight-body">리마인더 실제 등록은 카나나가 단순 정보 제공 AI가 아닌 사용자 대신 액션을 수행하는 에이전틱 AI임을 보여줍니다. Kanana-2의 Tool Calling 강화와 직접 연결되는 실사용 근거입니다.</div>
+        </div>
+        <div class="insight-card t">
+          <div class="insight-num">02</div>
+          <div class="insight-title">초개인화는 플랫폼 데이터에서 나온다</div>
+          <div class="insight-body">동 단위 위치·시간 자동 인식은 카카오 생태계 없이는 불가능한 기능입니다. 글로벌 AI 서비스가 단기간에 복제하기 어려운 구조적 우위입니다.</div>
+        </div>
+        <div class="insight-card r">
+          <div class="insight-num">03</div>
+          <div class="insight-title">전문성과 친근함의 트레이드오프</div>
+          <div class="insight-body">카나나는 친근함을, ChatGPT는 전문성을 선택했습니다. 이는 약점이 아니라 '일상 메이트'라는 포지셔닝과 일치하는 의도적 설계로 해석됩니다.</div>
+        </div>
+        <div class="insight-card g">
+          <div class="insight-num">04</div>
+          <div class="insight-title">안전 가이드라인 철학의 차이</div>
+          <div class="insight-body">감성 대화에서 한국 정서 맞춤 공감을 우선한 카나나와 글로벌 정신건강 기준으로 위기를 직접 확인하는 ChatGPT의 차이는 EU AI Act 대응 측면에서 카나나의 개선 필요 영역입니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Pain→TO-BE -->
+    <div class="sec reveal">
+      <div class="sec-label">Pain Point → TO-BE</div>
+      <div class="sec-title">개선 기능 정의 (F-1 ~ F-6)</div>
+      <div class="ptb">
+        <div class="ptb-list">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:.4rem">AS-IS Pain Point</div>
+          <div class="ptb-item pain"><div class="ptb-id p">P1</div><div class="ptb-text">전문성 깊이 부족</div></div>
+          <div class="ptb-item pain"><div class="ptb-id p">P2</div><div class="ptb-text">안전 가이드라인 미흡</div></div>
+          <div class="ptb-item pain"><div class="ptb-id p">P3</div><div class="ptb-text">그룹 메이트 웹 미지원</div></div>
+          <div class="ptb-item pain"><div class="ptb-id p">P4</div><div class="ptb-text">스페셜 메이트 품질 편차</div></div>
+          <div class="ptb-item pain"><div class="ptb-id p">P5</div><div class="ptb-text">메모리 UI 접근성 미흡</div></div>
+          <div class="ptb-item pain"><div class="ptb-id p">P6</div><div class="ptb-text">음성 대화 웹 미지원</div></div>
+        </div>
+        <div class="ptb-arrow">→</div>
+        <div class="ptb-list">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:.4rem">TO-BE 개선 기능</div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-1 · P5</div><div class="ptb-text">메모리 UI 고도화</div></div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-2 · P2</div><div class="ptb-text">정신건강 위기 감지 플로우</div></div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-3 · P1</div><div class="ptb-text">전문가 응답 모드 (일반/전문가/간결)</div></div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-4 · P6</div><div class="ptb-text">음성 대화 웹 지원</div></div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-5 · 강화</div><div class="ptb-text">카카오 생태계 연동 확대 (택시·버스·캘린더)</div></div>
+          <div class="ptb-item tobe"><div class="ptb-id t">F-6 · P3</div><div class="ptb-text">그룹 메이트 웹 완전 지원</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box reveal">
+      <div class="cta-title">TO-BE 프로토타입 직접 체험하기</div>
+      <div class="cta-desc">정의한 6개 기능이 실제로 구현된 인터랙티브 프로토타입입니다. OpenAI 또는 Claude API Key를 연결하면 실제로 동작합니다.</div>
+      <div class="cta-btns">
+        <a href="../../kanana-prototype.html" class="cta-btn cta-primary">🚀 프로토타입 체험</a>
+        <a href="../../index.html" class="cta-btn cta-ghost">← 포트폴리오로</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-name">Yeonseo Shin</div>
+  <div class="footer-links">
+    <a href="../../index.html">포트폴리오</a>
+    <a href="../../kanana-prototype.html">프로토타입</a>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+new Chart(document.getElementById('radarChart'),{
+  type:'radar',
+  data:{
+    labels:['초개인화','에이전틱\n실행','한국어\n적합성','생태계\n연동','전문성','안전\n가이드라인'],
+    datasets:[
+      {label:'카나나',data:[4.5,4.0,5.0,4.5,3.0,3.0],borderColor:'#818cf8',backgroundColor:'rgba(129,140,248,.12)',pointBackgroundColor:'#818cf8',borderWidth:2},
+      {label:'ChatGPT',data:[3.5,4.5,4.0,3.5,4.8,4.5],borderColor:'#14b8a6',backgroundColor:'rgba(20,184,166,.08)',pointBackgroundColor:'#14b8a6',borderWidth:2}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#6b7280',font:{size:12}}}},
+    scales:{r:{grid:{color:'#f3f4f6'},angleLines:{color:'#f3f4f6'},pointLabels:{color:'#9ca3af',font:{size:11}},ticks:{display:false},min:0,max:5}}}
+});
+</script>
+</body>
+</html>

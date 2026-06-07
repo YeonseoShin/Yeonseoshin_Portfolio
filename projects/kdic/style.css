@@ -1,0 +1,111 @@
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f8f9fc;--bg2:#fff;--border:#e5e7eb;--text:#111827;--text2:#6b7280;--text3:#9ca3af;--green:#059669;--amber:#d97706;--red:#dc2626;--sans:'Pretendard',system-ui,sans-serif;--mono:'DM Mono',monospace;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.header-sub{font-size:11px;color:var(--text3);margin-bottom:2px;}
+.header-title{font-size:17px;font-weight:700;}
+.header-right{display:flex;align-items:center;gap:12px;}
+select{padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:var(--sans);background:var(--bg);outline:none;cursor:pointer;}
+.back{font-size:13px;color:#2563eb;text-decoration:none;}
+main{max-width:1100px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:18px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.s-label{font-size:11px;color:var(--text3);margin-bottom:5px;}
+.s-val{font-size:22px;font-weight:700;}
+.s-val.green{color:var(--green);}
+.s-val.red{color:var(--red);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px;}
+.chart-wrap{position:relative;height:240px;}
+.legend-row{display:flex;gap:16px;margin-top:10px;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.sc{border:1px solid var(--border);border-radius:10px;padding:14px;}
+.sc-badge{display:inline-flex;font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;margin-bottom:6px;}
+.sc-name{font-size:13px;font-weight:600;margin-bottom:5px;}
+.sc-score{font-size:24px;font-weight:700;margin-bottom:6px;}
+.sc-bar-bg{height:3px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:10px;}
+.sc-bar{height:100%;border-radius:99px;transition:width .4s;}
+.sc-meta{display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:11px;color:var(--text3);}
+.sc-mv{color:var(--text2);font-weight:500;}
+
+/* ── Context Banner ── */
+.context-banner {
+  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}
+.context-year {
+  font-size: 11px; font-weight: 600;
+  color: #4f46e5; font-family: 'DM Mono', monospace;
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+.context-text {
+  font-size: 14px; color: #374151; line-height: 1.75;
+  margin-bottom: 12px;
+}
+.context-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ctx-tag {
+  font-size: 11px; font-weight: 500;
+  background: rgba(79,70,229,.1); color: #4f46e5;
+  border: 1px solid rgba(79,70,229,.2);
+  padding: 2px 10px; border-radius: 99px;
+}
+
+/* ── Chart hint ── */
+.chart-hint {
+  font-size: 11px; font-weight: 400;
+  color: var(--text3); font-family: 'DM Mono', monospace;
+  margin-left: 6px;
+}
+
+/* ── Insight list ── */
+.insight-list { display: flex; flex-direction: column; gap: 0; }
+.insight-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.insight-item:last-child { border-bottom: none; }
+.insight-icon {
+  font-size: 20px; width: 36px; height: 36px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.insight-body { flex: 1; }
+.insight-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.insight-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+/* ── Sector card updates ── */
+.sc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sc-unit { font-size: 12px; color: #9ca3af; margin-left: 2px; }
+.sc-note {
+  font-size: 11px; color: var(--text3);
+  margin-top: 8px; line-height: 1.5;
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
+
+/* ── Methodology box ── */
+.method-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px;
+  margin-top: 18px;
+}
+.method-title {
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+.method-body {
+  font-size: 13px; color: var(--text2); line-height: 1.8;
+}
+.method-body strong { color: var(--text); font-weight: 600; }
+
+/* ── Trend stat ── */
+#s-trend { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; }
